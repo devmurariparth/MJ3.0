@@ -19,13 +19,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
-      - name: Set up Java JDK 17
+      - name: Set up Java JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Prepare Web Directory
         run: |
@@ -42,17 +42,11 @@ jobs:
           npx cap init "MJ AI Agent" "com.mj.aiagent" --web-dir www
           npx cap add android
 
-      - name: Upgrade Gradle Wrapper to 8.10.2
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew wrapper --gradle-version 8.10.2
-          rm -rf ~/.gradle/caches
-
       - name: Compile APK with Gradle
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon --no-parallel
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
 
       - name: Prepare APK File
         run: |
