@@ -42,26 +42,24 @@ jobs:
           npx cap init "MJ AI Agent" "com.mj.aiagent" --web-dir www
           npx cap add android
 
-      - name: Upgrade Gradle to 8.7 (Fixes BouncyCastle MRJAR issue)
+      - name: Apply BouncyCastle 1.77 Fix for Java 17
         run: |
-          cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
-          distributionBase=GRADLE_USER_HOME
-          distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
-          zipStoreBase=GRADLE_USER_HOME
-          zipStorePath=wrapper/dists
-          EOF
-
-      - name: Sync Web Code into Android
-        run: |
-          npx cap copy android
-          npx cap sync android
+          echo "
+          allprojects {
+              configurations.all {
+                  resolutionStrategy {
+                      force 'org.bouncycastle:bcprov-jdk18on:1.77'
+                      force 'org.bouncycastle:bcpkix-jdk18on:1.77'
+                  }
+              }
+          }
+          " >> android/build.gradle
 
       - name: Compile APK with Gradle
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon
 
       - name: Prepare APK File
         run: |
