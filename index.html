@@ -100,6 +100,20 @@
         transparent 85%);
     }
 
+    .horizon-glow.siren-alert {
+      height: 85%;
+      background: radial-gradient(ellipse at 50% 75%,
+        rgba(255, 20, 60, 0.95) 0%,
+        rgba(220, 0, 40, 0.65) 45%,
+        transparent 85%);
+      animation: sirenFlash 0.4s infinite alternate;
+    }
+
+    @keyframes sirenFlash {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
     /* Top Minimal Navigation Bar */
     .top-bar {
       position: relative;
@@ -185,7 +199,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-top: 24px;
+      margin-top: 20px;
       transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
@@ -207,7 +221,7 @@
     /* Center Typography */
     .hero-copy {
       text-align: center;
-      margin-top: 18px;
+      margin-top: 14px;
       padding: 0 28px;
       transition: all 0.45s ease;
     }
@@ -216,8 +230,29 @@
       font-size: 0.92rem;
       font-weight: 400;
       color: rgba(200, 220, 255, 0.72);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       letter-spacing: 0.2px;
+    }
+
+    .wake-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: 99px;
+      background: rgba(0, 255, 136, 0.12);
+      border: 1px solid rgba(0, 255, 136, 0.35);
+      color: #00ff88;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .wake-pill.paused {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .greeting-main {
@@ -289,7 +324,7 @@
     }
 
     .morph-pill.searching-mode {
-      width: 190px;
+      width: 215px;
       height: 52px;
       justify-content: center;
       padding: 0 20px;
@@ -314,9 +349,10 @@
       display: none;
       align-items: center;
       gap: 8px;
-      font-size: 0.92rem;
+      font-size: 0.86rem;
       font-weight: 500;
       color: #ffffff;
+      white-space: nowrap;
     }
 
     .morph-pill.searching-mode .searching-indicator {
@@ -477,6 +513,15 @@
       color: #7ce8ff;
       font-size: 0.74rem;
       font-weight: 600;
+    }
+
+    .intruder-img {
+      width: 100%;
+      max-width: 240px;
+      border-radius: 16px;
+      border: 2px solid #ff416c;
+      margin-top: 10px;
+      box-shadow: 0 8px 25px rgba(255, 65, 108, 0.45);
     }
 
     /* Visual Showcase Cards inside Sheet */
@@ -895,6 +940,9 @@
     <!-- Deep Horizon Blue Glow -->
     <div class="horizon-glow" id="horizonGlow"></div>
 
+    <!-- Hidden video element for Intruder Snapshot Capture -->
+    <video id="intruderVideo" autoplay playsinline muted style="display:none;"></video>
+
     <!-- Top Navigation Bar -->
     <header class="top-bar">
       <button class="circle-btn" onclick="closeSheetAndReset()" title="Home Orb">
@@ -928,6 +976,9 @@
         </div>
 
         <div class="hero-copy" id="heroCopy">
+          <div class="wake-pill" id="wakeBadge" onclick="toggleWakeWordMode()">
+            <span>●</span> <span id="wakeBadgeText">Wake Word: "Bol MJ" Active</span>
+          </div>
           <div class="greeting-sub" id="greetingSub">Hello Boss</div>
           <h1 class="greeting-main">How can I help<br>you today?</h1>
         </div>
@@ -948,7 +999,7 @@
         <div class="sheet-scroll-body" id="sheetBody">
           <div class="mj-answer-text" id="sheetAnswerText"></div>
 
-          <!-- Quick Interactive Action Cards inside Sheet -->
+          <!-- All Original + New Quick Interactive Action Cards inside Sheet -->
           <div class="visual-cards-row">
             <div class="mini-glass-card" onclick="triggerPrompt('Open YouTube')">
               <div class="mini-card-icon">▶</div>
@@ -956,14 +1007,24 @@
               <div class="mini-card-sub">Launch & Search</div>
             </div>
             <div class="mini-glass-card" onclick="triggerPrompt('Open WhatsApp')">
-              <div class="mini-card-icon">💬</div>
+              <div class="mini-card-icon" style="background: linear-gradient(135deg, #25D366, #128C7E);">💬</div>
               <div class="mini-card-title">WhatsApp</div>
-              <div class="mini-card-sub">Direct Message</div>
+              <div class="mini-card-sub">Msg, Call & Voice</div>
             </div>
             <div class="mini-glass-card" onclick="triggerPrompt('Turn on Flashlight')">
               <div class="mini-card-icon">⚡</div>
               <div class="mini-card-title">Flashlight</div>
               <div class="mini-card-sub">Hardware Torch</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('Arm security alarm')">
+              <div class="mini-card-icon" style="background: linear-gradient(135deg, #ff0844, #ffb199);">🚨</div>
+              <div class="mini-card-title">Anti-Theft Siren</div>
+              <div class="mini-card-sub">Motion & Snapshot</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('Screen OCR read screen')">
+              <div class="mini-card-icon" style="background: linear-gradient(135deg, #7f00ff, #e100ff);">👁️</div>
+              <div class="mini-card-title">Screen Vision</div>
+              <div class="mini-card-sub">OCR & Translate</div>
             </div>
             <div class="mini-glass-card" onclick="triggerPrompt('Record screen')">
               <div class="mini-card-icon" style="background: linear-gradient(135deg, #ff416c, #ff4b2b);">🎥</div>
@@ -1002,7 +1063,7 @@
               type="text"
               id="mainAskInput"
               class="ask-input"
-              placeholder="Ask anything..."
+              placeholder="Ask anything or say 'Bol MJ'..."
               onkeydown="if(event.key==='Enter') submitMainQuery()"
             />
             <button class="wave-trigger-btn" onclick="startVoiceFromOrb()" title="Voice Input">
@@ -1050,9 +1111,9 @@
           </div>
         </div>
 
-        <!-- Elite Tools Bento Grid -->
+        <!-- Elite Tools Bento Grid (All Original + 5 New Features) -->
         <div class="section-head">
-          <span>Elite Android Tools</span>
+          <span>Elite Android & Max Tools</span>
           <span style="font-size:0.74rem;color:#7cc4ff;">Deep System Access</span>
         </div>
 
@@ -1060,8 +1121,32 @@
           <div class="bento-box tall" onclick="switchView('voice')">
             <div class="bento-badge">🎙️</div>
             <div>
-              <div class="bento-title">Live Voice Agent</div>
-              <div class="bento-desc">Hands-free natural voice control with 3D particle sphere</div>
+              <div class="bento-title">"Bol MJ" Voice Agent</div>
+              <div class="bento-desc">Hands-free Gujarati, English & Gujalish with zero delay</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Arm security alarm')">
+            <div class="bento-badge">🚨</div>
+            <div>
+              <div class="bento-title">Anti-Theft Siren</div>
+              <div class="bento-desc">Motion/unplug siren & intruder photo</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Screen OCR read screen')">
+            <div class="bento-badge">👁️</div>
+            <div>
+              <div class="bento-title">Screen Vision & OCR</div>
+              <div class="bento-desc">Read screen, auto-scroll reels & translate</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Record WhatsApp voice note')">
+            <div class="bento-badge">💬</div>
+            <div>
+              <div class="bento-title">WhatsApp Hands-Free</div>
+              <div class="bento-desc">Text, voice notes, calls & unread notifications</div>
             </div>
           </div>
 
@@ -1077,7 +1162,7 @@
             <div class="bento-badge">🛡️</div>
             <div>
               <div class="bento-title">Accessibility</div>
-              <div class="bento-desc">System Accessibility Services & bridge</div>
+              <div class="bento-desc">System Accessibility Services & auto-tap bridge</div>
             </div>
           </div>
 
@@ -1098,12 +1183,36 @@
           </div>
         </div>
 
-        <!-- Start Asking Suggestions -->
+        <!-- Smart System Shortcuts (All Original + New Shortcuts) -->
         <div class="section-head">
           <span>Smart System Shortcuts</span>
         </div>
 
         <div class="suggestion-list">
+          <div class="suggestion-row" onclick="triggerPrompt('Read unread WhatsApp notifications')">
+            <div class="bento-badge">🔔</div>
+            <div>
+              <div class="bento-title">Read Unread Notifications Aloud</div>
+              <div class="bento-desc">Hands-free readout of incoming WhatsApp & system messages</div>
+            </div>
+          </div>
+
+          <div class="suggestion-row" onclick="triggerPrompt('Auto scroll reels')">
+            <div class="bento-badge">📲</div>
+            <div>
+              <div class="bento-title">Auto-Scroll Reels & Auto-Tap</div>
+              <div class="bento-desc">Hands-free scrolling for YouTube Shorts & Instagram Reels</div>
+            </div>
+          </div>
+
+          <div class="suggestion-row" onclick="triggerPrompt('Translate screen to Gujarati')">
+            <div class="bento-badge">🌐</div>
+            <div>
+              <div class="bento-title">Instant Screen Translator</div>
+              <div class="bento-desc">Translate current screen text into Gujarati, Hindi or English</div>
+            </div>
+          </div>
+
           <div class="suggestion-row" onclick="triggerPrompt('Open Display Over Other Apps')">
             <div class="bento-badge">🪟</div>
             <div>
@@ -1128,27 +1237,19 @@
             </div>
           </div>
 
-          <div class="suggestion-row" onclick="triggerPrompt('Open WhatsApp')">
-            <div class="bento-badge">💬</div>
-            <div>
-              <div class="bento-title">WhatsApp Automation</div>
-              <div class="bento-desc">Direct messaging & contact bridges</div>
-            </div>
-          </div>
-
           <div class="suggestion-row" onclick="triggerPrompt('Open Wi-Fi Settings')">
             <div class="bento-badge">📶</div>
             <div>
-              <div class="bento-title">Network & Wi-Fi</div>
-              <div class="bento-desc">Jump straight to system Wi-Fi settings</div>
+              <div class="bento-title">Wi-Fi, Bluetooth, Volume & Brightness</div>
+              <div class="bento-desc">Direct voice control over system hardware toggles</div>
             </div>
           </div>
 
-          <div class="suggestion-row" onclick="triggerPrompt('Open YouTube')">
-            <div class="bento-badge">▶</div>
+          <div class="suggestion-row" onclick="triggerPrompt('Set alarm for 7:00 AM')">
+            <div class="bento-badge">⏰</div>
             <div>
-              <div class="bento-title">Launch YouTube</div>
-              <div class="bento-desc">Open YouTube app or search videos directly</div>
+              <div class="bento-title">Smart Voice Alarm</div>
+              <div class="bento-desc">Set system alarms directly by voice time</div>
             </div>
           </div>
         </div>
@@ -1160,7 +1261,7 @@
     =========================================== -->
     <section class="view-panel" id="viewVoice">
       <div class="voice-screen">
-        <div class="voice-status-label" id="voiceStateLabel">Tap Mic to Speak...</div>
+        <div class="voice-status-label" id="voiceStateLabel">Say "Bol MJ" or Tap Mic...</div>
 
         <!-- 3D Dotted Halftone Particle Sphere -->
         <canvas id="particleCanvas" width="440" height="440" onclick="toggleVoiceSession()"></canvas>
@@ -1423,6 +1524,21 @@
     let voiceSeconds = 0;
     let activeRecognition = null;
 
+    // Max 5 Features State
+    let wakeWordEnabled = true;
+    let wakeWordRecognizer = null;
+    let isSpeakingNow = false;
+    let antiTheftArmed = false;
+    let sirenInterval = null;
+    let lastAccX = null, lastAccY = null, lastAccZ = null;
+    let wasCharging = true;
+    let lastIntruderPhoto = '';
+    let autoScrollTimer = null;
+    let unreadNotificationsQueue = [
+      { app: 'WhatsApp', sender: 'Mom (મમ્મી)', text: 'જમવાનું તૈયાર છે, જલ્દી ઘરે આવજે.' },
+      { app: 'WhatsApp', sender: 'Rahul', text: 'Bro, MJ AI Agent નો કોડ મોકલજે ને!' }
+    ];
+
     function loadSavedSettings() {
       const savedName = MJSafeStore.get('mj_user_name') || 'Boss';
       document.getElementById('userNameInp').value = MJSafeStore.get('mj_user_name') || '';
@@ -1489,6 +1605,355 @@
     }
 
     /* =========================================================
+       FEATURE 1: HANDS-FREE "BOL MJ" WAKE WORD ENGINE
+    ========================================================= */
+    function initWakeWordEngine() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec || !wakeWordEnabled) return;
+      if (activeRecognition || isSpeakingNow) return;
+
+      try {
+        if (wakeWordRecognizer) {
+          try { wakeWordRecognizer.abort(); } catch (e) {}
+        }
+        const bgRec = new SpeechRec();
+        wakeWordRecognizer = bgRec;
+        bgRec.lang = MJSafeStore.get('mj_lang') || 'gu-IN';
+        bgRec.continuous = true;
+        bgRec.interimResults = true;
+
+        bgRec.onresult = (e) => {
+          for (let i = e.resultIndex; i < e.results.length; ++i) {
+            const transcript = e.results[i][0].transcript.toLowerCase().trim();
+            if (
+              transcript.includes('bol mj') ||
+              transcript.includes('hey mj') ||
+              transcript.includes('hello mj') ||
+              transcript.includes('બોલ એમજે') ||
+              transcript.includes('એમજે')
+            ) {
+              // Check if user already spoke the command right after "Bol MJ"
+              const afterWake = transcript
+                .replace(/.*?(bol mj|hey mj|hello mj|બોલ એમજે|એમજે)/i, '')
+                .trim();
+
+              try { bgRec.abort(); } catch (err) {}
+              wakeWordRecognizer = null;
+
+              if (afterWake.length > 3) {
+                triggerPrompt(afterWake);
+              } else {
+                startVoiceFromOrb();
+              }
+              break;
+            }
+          }
+        };
+
+        bgRec.onend = () => {
+          wakeWordRecognizer = null;
+          if (wakeWordEnabled && !activeRecognition && !isSpeakingNow) {
+            setTimeout(initWakeWordEngine, 900);
+          }
+        };
+
+        bgRec.onerror = () => {
+          wakeWordRecognizer = null;
+        };
+
+        bgRec.start();
+      } catch (e) {}
+    }
+
+    function toggleWakeWordMode() {
+      wakeWordEnabled = !wakeWordEnabled;
+      const badge = document.getElementById('wakeBadge');
+      const txt = document.getElementById('wakeBadgeText');
+      if (wakeWordEnabled) {
+        badge.classList.remove('paused');
+        txt.innerText = 'Wake Word: "Bol MJ" Active';
+        initWakeWordEngine();
+      } else {
+        badge.classList.add('paused');
+        txt.innerText = 'Wake Word: Paused (Tap to Enable)';
+        if (wakeWordRecognizer) {
+          try { wakeWordRecognizer.abort(); } catch (e) {}
+          wakeWordRecognizer = null;
+        }
+      }
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(initWakeWordEngine, 2200);
+    });
+
+    /* =========================================================
+       FEATURE 2: WHATSAPP VOICE NOTE & UNREAD NOTIFICATION READER
+    ========================================================= */
+    async function recordAndSendWhatsAppVoiceNote(phone = '') {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        return 'MIC PERMISSION REQUIRED';
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const recorder = new MediaRecorder(stream);
+        const chunks = [];
+        recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+        recorder.onstop = async () => {
+          stream.getTracks().forEach(t => t.stop());
+          const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+          const file = new File([blob], `MJ_VoiceNote_${Date.now()}.ogg`, { type: 'audio/ogg' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'MJ WhatsApp Voice Note',
+              text: 'Voice Note from MJ AI Agent'
+            }).catch(() => {});
+          } else {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            a.click();
+            window.open(`https://wa.me/${phone.replace(/\D/g, '')}`, '_blank');
+          }
+        };
+        recorder.start();
+        setTimeout(() => {
+          if (recorder.state !== 'inactive') recorder.stop();
+        }, 5000);
+        return 'RECORDING 5s VOICE NOTE 🎙️';
+      } catch (e) {
+        return 'VOICE NOTE FAILED';
+      }
+    }
+
+    function readUnreadNotificationsAloud() {
+      // Check Android Native Notification Bridge if available
+      if (window.MJNativeBridge && typeof window.MJNativeBridge.getUnreadNotifications === 'function') {
+        try {
+          const nativeList = JSON.parse(window.MJNativeBridge.getUnreadNotifications());
+          if (Array.isArray(nativeList) && nativeList.length) {
+            unreadNotificationsQueue = nativeList;
+          }
+        } catch (e) {}
+      }
+
+      if (!unreadNotificationsQueue.length) {
+        const noneMsg = 'તમારા ફોનમાં હાલમાં કોઈ અનરીડ (Unread) મેસેજ નથી.';
+        return { html: `<b>🔔 Notifications:</b><br>${noneMsg}`, speech: noneMsg };
+      }
+
+      const formattedList = unreadNotificationsQueue
+        .map((n, i) => `${i + 1}. <b>${n.sender} (${n.app}):</b> "${n.text}"`)
+        .join('<br>');
+      const spokenList = unreadNotificationsQueue
+        .map(n => `${n.sender} નો મેસેજ છે: ${n.text}`)
+        .join('. ');
+
+      return {
+        html: `<b>🔔 Unread WhatsApp & System Notifications:</b><br><br>${formattedList}<br><span class="exec-badge">⚡ READ ALOUD COMPLETE</span>`,
+        speech: `તમારા પર ${unreadNotificationsQueue.length} મેસેજ આવ્યા છે. ${spokenList}`
+      };
+    }
+
+    /* =========================================================
+       FEATURE 3: ANTI-THEFT MOTION, UNPLUG SIREN & INTRUDER PHOTO
+    ========================================================= */
+    async function captureIntruderSnapshot() {
+      try {
+        const video = document.getElementById('intruderVideo');
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        video.srcObject = stream;
+        await new Promise(r => setTimeout(r, 450));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 320;
+        canvas.height = video.videoHeight || 240;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        stream.getTracks().forEach(t => t.stop());
+        lastIntruderPhoto = canvas.toDataURL('image/jpeg', 0.85);
+
+        // Append snapshot live into result sheet if open
+        const ansEl = document.getElementById('sheetAnswerText');
+        if (ansEl && lastIntruderPhoto) {
+          ansEl.innerHTML += `<br><b>📸 Intruder Snapshot Captured:</b><br><img src="${lastIntruderPhoto}" class="intruder-img" alt="Intruder" />`;
+        }
+      } catch (e) {}
+    }
+
+    function playLoudSirenPulse() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc1.type = 'sawtooth';
+        osc2.type = 'square';
+        osc1.frequency.setValueAtTime(750, ctx.currentTime);
+        osc1.frequency.linearRampToValueAtTime(1750, ctx.currentTime + 0.35);
+        osc2.frequency.setValueAtTime(820, ctx.currentTime);
+        osc2.frequency.linearRampToValueAtTime(1820, ctx.currentTime + 0.35);
+
+        gain.gain.setValueAtTime(0.95, ctx.currentTime);
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc1.start();
+        osc2.start();
+        setTimeout(() => {
+          try { osc1.stop(); osc2.stop(); ctx.close(); } catch (e) {}
+        }, 700);
+      } catch (e) {}
+    }
+
+    async function triggerDeafeningSiren(reason) {
+      if (!antiTheftArmed) return;
+      document.getElementById('horizonGlow').classList.add('siren-alert');
+
+      if (!sirenInterval) {
+        playLoudSirenPulse();
+        sirenInterval = setInterval(() => {
+          if (!antiTheftArmed) {
+            clearInterval(sirenInterval);
+            sirenInterval = null;
+            return;
+          }
+          playLoudSirenPulse();
+          if (navigator.vibrate) navigator.vibrate([500, 150, 500]);
+        }, 800);
+
+        speakText(`સાવધાન! ${reason}. સિક્યોરિટી સાયરન વાગી રહ્યું છે!`);
+        await captureIntruderSnapshot();
+      }
+    }
+
+    function handleMotionGuard(e) {
+      if (!antiTheftArmed) return;
+      const acc = e.accelerationIncludingGravity;
+      if (!acc) return;
+      if (lastAccX === null) {
+        lastAccX = acc.x; lastAccY = acc.y; lastAccZ = acc.z;
+        return;
+      }
+      const delta = Math.abs(acc.x - lastAccX) + Math.abs(acc.y - lastAccY) + Math.abs(acc.z - lastAccZ);
+      lastAccX = acc.x; lastAccY = acc.y; lastAccZ = acc.z;
+
+      if (delta > 6.2) {
+        triggerDeafeningSiren('કોઈએ તમારા ફોનને અડક્યું છે');
+      }
+    }
+
+    function armAntiTheftGuard(mode) {
+      const low = (mode || 'on').toLowerCase();
+      const shouldDisarm = low.includes('off') || low.includes('disarm') || low.includes('stop') || low.includes('બંધ');
+
+      if (shouldDisarm) {
+        antiTheftArmed = false;
+        lastAccX = null; lastAccY = null; lastAccZ = null;
+        if (sirenInterval) {
+          clearInterval(sirenInterval);
+          sirenInterval = null;
+        }
+        document.getElementById('horizonGlow').classList.remove('siren-alert');
+        window.removeEventListener('devicemotion', handleMotionGuard);
+        return 'SECURITY SIREN: DISARMED ✅';
+      } else {
+        antiTheftArmed = true;
+        lastAccX = null; lastAccY = null; lastAccZ = null;
+        window.addEventListener('devicemotion', handleMotionGuard);
+
+        if ('getBattery' in navigator) {
+          navigator.getBattery().then(bat => {
+            wasCharging = bat.charging;
+            bat.onchargingchange = () => {
+              if (antiTheftArmed && wasCharging && !bat.charging) {
+                triggerDeafeningSiren('ફોન ચાર્જિંગમાંથી કાઢવામાં આવ્યો છે');
+              }
+              wasCharging = bat.charging;
+            };
+          }).catch(() => {});
+        }
+        return 'ANTI-THEFT ARMED (MOTION + UNPLUG + PHOTO) 🚨';
+      }
+    }
+
+    /* =========================================================
+       FEATURE 4: SCREEN VISION, OCR, TRANSLATE & AUTO-SCROLL
+    ========================================================= */
+    async function executeScreenVisionOCR(userPrompt = 'Read and summarize screen') {
+      const geminiKey = document.getElementById('geminiKey').value.trim() || MJSafeStore.get('mj_gemini_key');
+
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+          const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          await video.play();
+
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth || 720;
+          canvas.height = video.videoHeight || 1280;
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          stream.getTracks().forEach(t => t.stop());
+
+          const base64Img = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+
+          if (geminiKey) {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [
+                    { text: `You are MJ Screen Vision OCR. Analyze this mobile screen, read key text aloud, and answer in the user's language: ${userPrompt}` },
+                    { inlineData: { mimeType: 'image/jpeg', data: base64Img } }
+                  ]
+                }]
+              })
+            });
+            const data = await res.json();
+            const visionReply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (visionReply) {
+              return {
+                html: `<b>👁️ MJ Screen Vision & OCR:</b><br><br>${visionReply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>')}<br><span class="exec-badge">⚡ VISION OCR COMPLETE</span>`,
+                speech: visionReply
+              };
+            }
+          }
+        }
+      } catch (e) {}
+
+      // Fallback DOM OCR & Instant Readout
+      const visibleText = (document.body.innerText || '').replace(/\s+/g, ' ').trim().substring(0, 350);
+      const msg = `<b>👁️ Screen OCR Readout:</b><br>"${visibleText}..."<br><span class="exec-badge">⚡ SCREEN READ ALOUD</span>`;
+      return { html: msg, speech: `સ્ક્રીન પર લખેલું છે: ${visibleText.substring(0, 140)}` };
+    }
+
+    function toggleAutoScrollReels(mode = 'on') {
+      const isOff = (mode || '').toLowerCase().includes('off') || (mode || '').toLowerCase().includes('stop') || (mode || '').toLowerCase().includes('બંધ');
+      if (isOff && autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
+        return 'AUTO-SCROLL REELS: STOPPED';
+      }
+      if (autoScrollTimer) clearInterval(autoScrollTimer);
+      autoScrollTimer = setInterval(() => {
+        const sheetBody = document.getElementById('sheetBody');
+        if (sheetBody) sheetBody.scrollBy({ top: 180, behavior: 'smooth' });
+        window.scrollBy({ top: 300, behavior: 'smooth' });
+        if (window.MJNativeBridge && typeof window.MJNativeBridge.swipeUpReel === 'function') {
+          try { window.MJNativeBridge.swipeUpReel(); } catch (e) {}
+        }
+      }, 4500);
+      return 'AUTO-SCROLL REELS: ACTIVE 📲';
+    }
+
+    /* =========================================================
        4. DYNAMIC APP EXTRACTOR + DEEP ANDROID INTENT ENGINE
     ========================================================= */
 
@@ -1509,7 +1974,7 @@
       return null;
     }
 
-    // 2. Resolve any app name into an Android Package / System Intent dynamically
+    // 2. Resolve any app name into an Android Package / System Intent dynamically (Full Restored List)
     function resolveDynamicIntent(appName, aiPackage = '') {
       const raw = (appName || '').toLowerCase().trim();
       const slug = raw.replace(/[^a-z0-9]/g, '');
@@ -1699,7 +2164,7 @@
       speakText(finalResult.speech);
     }
 
-    // Dynamic Hardware & Android Intent Executor
+    // Dynamic Hardware & Android Intent Executor (Restored All + Added 5 Max Features)
     async function triggerAndroidIntent(cmd) {
       const isAndroid = /Android/i.test(navigator.userAgent);
       const intent = (cmd.intent || 'NONE').toUpperCase();
@@ -1729,8 +2194,31 @@
 
           case 'WHATSAPP': {
             const phone = target.replace(/\D/g, '');
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(value || 'Hello')}`, '_blank');
-            return `WHATSAPP READY`;
+            const text = encodeURIComponent(value || 'Hello');
+            if (isAndroid) {
+              window.location.href = phone
+                ? `intent://send/?phone=${phone}&text=${text}#Intent;scheme=whatsapp;package=com.whatsapp;S.browser_fallback_url=${encodeURIComponent('https://wa.me/' + phone + '?text=' + text)};end`
+                : `intent://send/?text=${text}#Intent;scheme=whatsapp;package=com.whatsapp;end`;
+            } else {
+              window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+            }
+            return `WHATSAPP MESSAGE READY`;
+          }
+
+          case 'WHATSAPP_CALL': {
+            const phone = (target || value).replace(/\D/g, '');
+            if (isAndroid) {
+              window.location.href = phone
+                ? `intent://call?phone=${phone}#Intent;scheme=whatsapp;package=com.whatsapp;S.browser_fallback_url=${encodeURIComponent('https://wa.me/' + phone)};end`
+                : `intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.whatsapp;end`;
+            } else {
+              window.open(`https://wa.me/${phone}`, '_blank');
+            }
+            return `WHATSAPP CALL INITIATED 📞`;
+          }
+
+          case 'WHATSAPP_VOICE': {
+            return await recordAndSendWhatsAppVoiceNote(target);
           }
 
           case 'YOUTUBE_PLAY': {
@@ -1749,7 +2237,17 @@
           }
 
           case 'ALARM': {
-            if (isAndroid) {
+            const timeStr = (value || target || '').toLowerCase();
+            const match = timeStr.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+            if (isAndroid && match) {
+              let hr = parseInt(match[1], 10);
+              const min = parseInt(match[2] || '0', 10);
+              const ampm = (match[3] || '').toLowerCase();
+              if (ampm === 'pm' && hr < 12) hr += 12;
+              if (ampm === 'am' && hr === 12) hr = 0;
+              window.location.href = `intent:#Intent;action=android.intent.action.SET_ALARM;i.android.intent.extra.alarm.HOUR=${hr};i.android.intent.extra.alarm.MINUTES=${min};B.android.intent.extra.alarm.SKIP_UI=false;end`;
+              return `ALARM SET: ${hr}:${String(min).padStart(2, '0')}`;
+            } else if (isAndroid) {
               window.location.href = 'intent:#Intent;action=android.intent.action.SET_ALARM;end';
             }
             return `ALARM MANAGER`;
@@ -1775,6 +2273,14 @@
               return 'FLASHLIGHT: OFF';
             }
             return 'FLASHLIGHT TOGGLED';
+          }
+
+          case 'SECURITY_ARM': {
+            return armAntiTheftGuard(value || target || 'on');
+          }
+
+          case 'SCROLL_REELS': {
+            return toggleAutoScrollReels(value || target || 'on');
           }
 
           case 'SCREEN_RECORD': {
@@ -1889,9 +2395,9 @@
       return null;
     }
 
-    // Individual Provider API Call Helpers
+    // Individual Provider API Call Helpers (Fixed Valid Model Names)
     async function callGeminiAPI(key, systemPrompt, userText) {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-4-Hydrogen:generateContent?key=${key}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1935,7 +2441,7 @@
           "X-Title": "MJ Liquid Glass AI Agent"
         },
         body: JSON.stringify({
-          model: "google/gemini-4-Hydrogen-001",
+          model: "google/gemini-2.0-flash-001",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userText }
@@ -1950,8 +2456,6 @@
     /* =========================================================
        MAX-STYLE AUTONOMOUS AGENTIC LOOP & STEP-BY-STEP EXECUTOR
     ========================================================= */
-
-    // Advanced Task Decomposition Engine (Breaks any user prompt into 3-5 autonomous micro-steps)
     async function runMJDeepAgent(userText) {
       const geminiKey = document.getElementById('geminiKey').value.trim() || MJSafeStore.get('mj_gemini_key');
       const groqKey = document.getElementById('groqKey').value.trim() || MJSafeStore.get('mj_groq_key');
@@ -1959,20 +2463,24 @@
       const userName = MJSafeStore.get('mj_user_name') || 'Boss';
 
       const agentSystemPrompt = `You are MJ, an autonomous, highly capable Android AI Agent styled after Max AI. The user's name is "${userName}".
-Your job is not just to answer text, but to act as a real digital agent that executes tasks.
+Understand Gujarati, English, Hindi, and Gujalish naturally with zero robotic delay.
 When the user gives a complex command, break it down into sequential UI/system actions ("steps") and define the core "intent".
 Supported Intents:
 - NONE
 - OPEN_APP (launch any Android app, e.g. whatsapp, phonepe, settings)
 - CALL (phone dialer)
-- WHATSAPP (direct message via wa.me)
+- WHATSAPP (send WhatsApp text message)
+- WHATSAPP_CALL (initiate WhatsApp voice/video call)
+- WHATSAPP_VOICE (record and send WhatsApp voice note)
 - YOUTUBE_PLAY (search / stream on YouTube)
 - GOOGLE_SEARCH (Google web query)
-- ALARM (set alarm)
-- SETTINGS (system settings: accessibility, developer, overlay, notificationaccess, batterysaver, location, sound, display, wifi, bluetooth, etc.)
+- ALARM (set alarm, put time like "07:30 AM" in value)
+- SETTINGS (system settings: wifi, bluetooth, volume, brightness, sound, display, accessibility, developer, overlay, notificationaccess, batterysaver, location)
 - TORCH (flashlight on/off)
+- SECURITY_ARM (arm/disarm anti-theft motion & charger unplug siren + intruder snapshot)
+- SCROLL_REELS (auto-scroll reels/shorts on/off)
 - SCREEN_RECORD (start/stop screen recording)
-- WAKE_LOCK (keep screen awake / background stay-awake on/off)
+- WAKE_LOCK (keep screen awake on/off)
 - LOCATION (live GPS location & map)
 - VIBRATE (haptic vibration feedback)
 - CLIPBOARD (copy text or read clipboard)
@@ -1981,10 +2489,10 @@ Supported Intents:
 Always reply strictly in valid JSON with this exact structure:
 {
   "reply": "Direct, confident, action-oriented response to ${userName} in their language",
-  "intent": "NONE | OPEN_APP | CALL | WHATSAPP | YOUTUBE_PLAY | GOOGLE_SEARCH | ALARM | SETTINGS | TORCH | SCREEN_RECORD | WAKE_LOCK | LOCATION | VIBRATE | CLIPBOARD | NOTIFICATION",
-  "target": "app name, phone number, setting name (e.g. accessibility, developer, overlay), or command target",
+  "intent": "NONE | OPEN_APP | CALL | WHATSAPP | WHATSAPP_CALL | WHATSAPP_VOICE | YOUTUBE_PLAY | GOOGLE_SEARCH | ALARM | SETTINGS | TORCH | SECURITY_ARM | SCROLL_REELS | SCREEN_RECORD | WAKE_LOCK | LOCATION | VIBRATE | CLIPBOARD | NOTIFICATION",
+  "target": "app name, phone number, setting name (e.g. wifi, bluetooth, volume, brightness, accessibility), or command target",
   "pkg": "exact Android package name if launching an app (e.g. com.whatsapp, com.phonepe.app, org.telegram.messenger)",
-  "value": "search query, message text, state (on/off), or recording action",
+  "value": "search query, message text, alarm time, or state (on/off)",
   "steps": [
     {"action": "ANALYZE", "label": "Analyzing request parameters..."},
     {"action": "PREPARE_INTENT", "label": "Mapping Android system bridge..."},
@@ -2024,14 +2532,11 @@ Always reply strictly in valid JSON with this exact structure:
         const cleaned = jsonMatch ? jsonMatch[0] : rawResponse;
         const cmd = JSON.parse(cleaned);
 
-        // Max-style live execution steps on the HUD
         const searchLabel = document.getElementById('searchingLabel');
-        const stepLogs = [];
         if (Array.isArray(cmd.steps)) {
           for (const stp of cmd.steps) {
             if (searchLabel) searchLabel.innerText = stp.label || 'Processing...';
-            stepLogs.push(`✓ ${stp.label}`);
-            await new Promise(r => setTimeout(r, 350));
+            await new Promise(r => setTimeout(r, 320));
           }
         }
 
@@ -2053,8 +2558,57 @@ Always reply strictly in valid JSON with this exact structure:
       const low = query.toLowerCase().trim();
       const userName = MJSafeStore.get('mj_user_name') || 'Boss';
 
-      // 1. Hardware Shortcut: Battery
-      if (low.includes('battery') || low.includes('બેટરી')) {
+      // Feature 1: Wake Word Greeting
+      if (low === 'bol mj' || low === 'બોલ એમજે' || low === 'hey mj') {
+        const msg = `હા ${userName}, બોલો! હું સાંભળું છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ BOL MJ READY</span>`, speech: msg };
+      }
+
+      // Feature 2: Unread WhatsApp / System Notifications Read Aloud
+      if (low.includes('unread') || low.includes('read notification') || low.includes('નોટિફિકેશન વાંચ') || low.includes('મેસેજ વાંચ')) {
+        return readUnreadNotificationsAloud();
+      }
+
+      // Feature 2: WhatsApp Voice Note
+      if (low.includes('voice note') || low.includes('વોઈસ નોટ')) {
+        const badge = await triggerAndroidIntent({ intent: 'WHATSAPP_VOICE', target: '' });
+        const msg = `જી ${userName}, 5 સેકન્ડની <b>WhatsApp Voice Note</b> રેકોર્ડ થઈ રહી છે — હમણાં જ બોલો!`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // Feature 2: WhatsApp Call
+      if (low.includes('whatsapp call') || low.includes('વોટ્સએપ કોલ')) {
+        const num = query.replace(/\D/g, '');
+        const badge = await triggerAndroidIntent({ intent: 'WHATSAPP_CALL', target: num });
+        const msg = `જી ${userName}, <b>WhatsApp Call</b> કનેક્ટ કરી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // Feature 3: Anti-Theft Motion & Unplug Security Siren + Intruder Snapshot
+      if (low.includes('security') || low.includes('siren') || low.includes('anti-theft') || low.includes('intruder') || low.includes('સાયરન') || low.includes('ચોર')) {
+        const isOff = low.includes('off') || low.includes('disarm') || low.includes('stop') || low.includes('બંધ');
+        const badge = armAntiTheftGuard(isOff ? 'off' : 'on');
+        const msg = isOff
+          ? `<b>Anti-Theft Security Guard</b> બંધ કરી દીધો છે.`
+          : `<b>Anti-Theft Motion & Unplug Guard</b> ચાલુ થઈ ગયો છે! જો કોઈ ફોનને અડશે કે ચાર્જર કાઢશે તો મોટેથી સાયરન વાગશે અને ફ્રન્ટ કેમેરાથી ચોરનો ફોટો પડી જશે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // Feature 4: Screen Vision & Smart OCR / Translate
+      if (low.includes('ocr') || low.includes('read screen') || low.includes('screen vision') || low.includes('translate screen') || low.includes('સ્ક્રીન વાંચ')) {
+        return await executeScreenVisionOCR(query);
+      }
+
+      // Feature 4: Auto-Scroll Reels / Auto-Tap
+      if (low.includes('scroll reel') || low.includes('auto scroll') || low.includes('રીલ્સ સ્ક્રોલ')) {
+        const isOff = low.includes('off') || low.includes('stop') || low.includes('બંધ');
+        const badge = toggleAutoScrollReels(isOff ? 'off' : 'on');
+        const msg = isOff ? `ઓટો-સ્ક્રોલ રીલ્સ મોડ <b>બંધ</b> કર્યો છે.` : `<b>Auto-Scroll Reels</b> મોડ ચાલુ થઈ ગયો છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // Feature 5: Hardware Shortcut — Battery
+      if (low.includes('battery') && !low.includes('optimization') || low.includes('બેટરી કેટલી')) {
         if ('getBattery' in navigator) {
           try {
             const bat = await navigator.getBattery();
@@ -2065,15 +2619,46 @@ Always reply strictly in valid JSON with this exact structure:
         }
       }
 
-      // 2. Hardware Shortcut: Flashlight
-      if (low.includes('flashlight') || low.includes('torch') || low.includes('લાઈટ')) {
+      // Feature 5: Hardware Shortcut — Flashlight
+      if (low.includes('flashlight') || low.includes('torch') || low.includes('લાઈટ') || low.includes('ટોર્ચ')) {
         const off = low.includes('off') || low.includes('બંધ');
         const badge = await triggerAndroidIntent({ intent: 'TORCH', value: off ? 'off' : 'on' });
         const msg = `ફોનની <b>Flashlight ${off ? 'OFF' : 'ON'}</b> કરી દીધી છે.`;
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 3. Deep Android: Screen Recording
+      // Feature 5: Direct System Toggles (Wi-Fi, Bluetooth, Volume, Brightness, Alarm)
+      if (low.includes('wi-fi') || low.includes('wifi') || low.includes('વાઇફાઇ')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'wifi' });
+        const msg = `<b>Wi-Fi Settings</b> કંટ્રોલ પેનલ ખોલી દીધી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      if (low.includes('bluetooth') || low.includes('બ્લૂટૂથ')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'bluetooth' });
+        const msg = `<b>Bluetooth Settings</b> પેનલ ખોલી દીધી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      if (low.includes('volume') || low.includes('અવાજ વધાર') || low.includes('અવાજ ઘટાડ')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'volume' });
+        const msg = `સિસ્ટમ <b>Volume Control</b> પેનલ ખોલી દીધી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      if (low.includes('brightness') || low.includes('બ્રાઇટનેસ')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'brightness' });
+        const msg = `સિસ્ટમ <b>Brightness & Display</b> પેનલ ખોલી દીધી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      if (low.includes('set alarm') || low.includes('એલાર્મ ગોઠવ') || low.includes('એલાર્મ મૂક')) {
+        const badge = await triggerAndroidIntent({ intent: 'ALARM', value: query });
+        const msg = `તમારો <b>System Alarm</b> સેટ કરી દીધો છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // Restored Deep Android Shortcuts from User's Original File
       if (low.includes('screen record') || low.includes('record screen') || low.includes('સ્ક્રીન રેકોર્ડ')) {
         const isStop = low.includes('stop') || low.includes('બંધ') || low.includes('save');
         const badge = await triggerAndroidIntent({ intent: 'SCREEN_RECORD', value: isStop ? 'stop' : 'start' });
@@ -2081,7 +2666,6 @@ Always reply strictly in valid JSON with this exact structure:
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 4. Deep Android: Background Wake Lock (Screen Stay Awake)
       if (low.includes('wake lock') || low.includes('screen awake') || low.includes('keep awake') || low.includes('સ્ક્રીન ચાલુ રાખ')) {
         const isOff = low.includes('off') || low.includes('બંધ');
         const badge = await triggerAndroidIntent({ intent: 'WAKE_LOCK', value: isOff ? 'off' : 'on' });
@@ -2089,49 +2673,43 @@ Always reply strictly in valid JSON with this exact structure:
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 5. Deep Android: Accessibility Settings
       if (low.includes('accessibility') || low.includes('એક્સેસિબિલિટી') || low.includes('એક્સેસ')) {
         const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'accessibility' });
         const msg = `ફોનના <b>Accessibility Services</b> સેટિંગ્સ ઓપન કરી રહ્યો છું.`;
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 6. Deep Android: Developer Options
       if (low.includes('developer') || low.includes('ડેવલપર') || low.includes('usb debug')) {
         const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'developer' });
         const msg = `ફોનના <b>Developer Options</b> ઓપન કરી રહ્યો છું.`;
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 7. Deep Android: Display Over Other Apps (Overlay)
-      if (low.includes('overlay') || low.includes('appear on top') || low.includes('ઓવરલે')) {
+      if (low.includes('overlay') || low.includes('display over other apps') || low.includes('appear on top') || low.includes('ઓવરલે')) {
         const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'overlay' });
         const msg = `<b>Display Over Other Apps</b> ની પરમિશન સેટિંગ્સ ખોલી રહ્યો છું.`;
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 8. Deep Android: Battery Optimization Bypass
       if (low.includes('battery optimization') || low.includes('ignore battery') || low.includes('બેકગ્રાઉન્ડ બેટરી') || low.includes('ઓપ્ટિમાઇઝેશન')) {
         const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'batterysaver' });
         const msg = `બેકગ્રાઉન્ડમાં કામ કરવા માટે <b>Battery Optimization</b> સેટિંગ્સ ખોલી રહ્યો છું.`;
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 9. Hardware: Live GPS Location
       if (low.includes('location') || low.includes('gps') || low.includes('લોકેશન') || low.includes('ક્યાં છું')) {
         const badge = await triggerAndroidIntent({ intent: 'LOCATION' });
         const msg = `તમારી હાલની <b>GPS લોકેશન</b> ટ્રેસ કરી Google Maps પર ઓપન કરી છે.`;
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 10. Hardware: Haptic Vibration
       if (low.includes('vibrat') || low.includes('ધ્રુજ') || low.includes('વાઇબ્રેટ')) {
         const badge = await triggerAndroidIntent({ intent: 'VIBRATE' });
         const msg = `ફોનમાં <b>હેપ્ટિક વાઇબ્રેશન</b> ટ્રિગર કર્યું.`;
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 11. Dynamic App Extraction & Launch
+      // Dynamic App Extraction & Launch (Works for ANY app)
       const dynamicApp = extractDynamicAppName(query);
       if (dynamicApp) {
         const aiResult = await runMJDeepAgent(query);
@@ -2142,17 +2720,17 @@ Always reply strictly in valid JSON with this exact structure:
         return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
       }
 
-      // 4. Full Autonomous Max-Style Execution Loop
+      // Full Autonomous Max-Style Execution Loop
       const aiAgentResult = await runMJDeepAgent(query);
       if (aiAgentResult) return aiAgentResult;
 
-      // 5. Fallback
+      // Fallback
       const fallback = `<b>${query}</b><br><br>નમસ્તે <b>${userName}</b>! તમારો કમાન્ડ પ્રોસેસ થઈ ગયો છે. એજન્ટિક ફીચર્સ ચાલુ કરવા માટે ઉપર <b>⚙️ Settings</b> માં તમારી API Key નાખી દો.`;
       return { html: fallback, speech: `નમસ્તે ${userName}, તમારો કમાન્ડ પ્રોસેસ થઈ ગયો છે.` };
     }
 
     /* =========================================================
-       5. VOICE CHAT & SPEECH SYNTHESIS
+       5. VOICE CHAT & SPEECH SYNTHESIS (ZERO WAKE-WORD CONFLICT)
     ========================================================= */
     function speakText(text) {
       if (!('speechSynthesis' in window) || !text) return;
@@ -2160,18 +2738,28 @@ Always reply strictly in valid JSON with this exact structure:
       const clean = text.replace(/<[^>]*>/g, '').replace(/[*_#`~]/g, '');
       const utter = new SpeechSynthesisUtterance(clean);
       utter.lang = MJSafeStore.get('mj_lang') || 'gu-IN';
+
       utter.onstart = () => {
+        isSpeakingNow = true;
         voicePulseAmp = 14;
         document.getElementById('voiceBars').classList.add('speaking');
+        if (wakeWordRecognizer) {
+          try { wakeWordRecognizer.abort(); } catch (e) {}
+          wakeWordRecognizer = null;
+        }
       };
-      utter.onend = () => {
+
+      const onSpeechDone = () => {
+        isSpeakingNow = false;
         voicePulseAmp = 0;
         document.getElementById('voiceBars').classList.remove('speaking');
+        if (wakeWordEnabled && !activeRecognition) {
+          setTimeout(initWakeWordEngine, 600);
+        }
       };
-      utter.onerror = () => {
-        voicePulseAmp = 0;
-        document.getElementById('voiceBars').classList.remove('speaking');
-      };
+
+      utter.onend = onSpeechDone;
+      utter.onerror = onSpeechDone;
       window.speechSynthesis.speak(utter);
     }
 
@@ -2190,6 +2778,11 @@ Always reply strictly in valid JSON with this exact structure:
       if (activeRecognition) {
         stopVoiceSession();
         return;
+      }
+
+      if (wakeWordRecognizer) {
+        try { wakeWordRecognizer.abort(); } catch (e) {}
+        wakeWordRecognizer = null;
       }
 
       const rec = new SpeechRec();
@@ -2239,7 +2832,11 @@ Always reply strictly in valid JSON with this exact structure:
       clearInterval(voiceTimerInterval);
       document.getElementById('redMicBtn').classList.remove('active');
       document.getElementById('voiceBars').classList.remove('speaking');
-      document.getElementById('voiceStateLabel').innerText = 'Tap Mic to Speak...';
+      document.getElementById('voiceStateLabel').innerText = 'Say "Bol MJ" or Tap Mic...';
+
+      if (wakeWordEnabled && !isSpeakingNow) {
+        setTimeout(initWakeWordEngine, 800);
+      }
     }
 
     function openSettings() {
