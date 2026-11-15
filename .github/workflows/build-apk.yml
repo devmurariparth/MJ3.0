@@ -42,24 +42,17 @@ jobs:
           npx cap init "MJ AI Agent" "com.mj.aiagent" --web-dir www
           npx cap add android
 
-      - name: Apply BouncyCastle 1.77 Fix for Java 17
+      - name: Upgrade Gradle Wrapper to 8.10.2
         run: |
-          echo "
-          allprojects {
-              configurations.all {
-                  resolutionStrategy {
-                      force 'org.bouncycastle:bcprov-jdk18on:1.77'
-                      force 'org.bouncycastle:bcpkix-jdk18on:1.77'
-                  }
-              }
-          }
-          " >> android/build.gradle
+          cd android
+          chmod +x gradlew
+          ./gradlew wrapper --gradle-version 8.10.2
+          rm -rf ~/.gradle/caches
 
       - name: Compile APK with Gradle
         run: |
           cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --no-parallel
 
       - name: Prepare APK File
         run: |
