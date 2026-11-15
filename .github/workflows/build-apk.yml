@@ -1,4 +1,4 @@
-name: Build and Release Android APK
+name: Build MJ APK
 
 on:
   push:
@@ -19,28 +19,44 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
 
-      - name: Set up Java JDK 21
+      - name: Set up Java JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '17'
 
-      - name: Prepare Web Directory
+      - name: Initialize Capacitor Android Project
         run: |
           mkdir -p www
-          cp index.html manifest.json sw.js *.png www/
-
-      - name: Install Dependencies
-        run: |
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-
-      - name: Initialize Android Project
-        run: |
-          npx cap init "MJ AI Agent" "com.mj.aiagent" --web-dir www
+          cp index.html www/
+          cp manifest.json sw.js *.png www/ 2>/dev/null || true
+          node -e "const fs=require('fs'); fs.writeFileSync('package.json', JSON.stringify({name:'mj-ai-agent',version:'1.0.0',private:true},null,2));"
+          npm install @capacitor/core@6.1.2 @capacitor/cli@6.1.2 @capacitor/android@6.1.2
+          npx cap init "MJ AI" "com.mj.aiagent" --web-dir www
           npx cap add android
+          npx cap sync android
+
+      - name: Inject Android Hardware Permissions
+        run: |
+          node -e '
+            const fs = require("fs");
+            const path = "android/app/src/main/AndroidManifest.xml";
+            let xml = fs.readFileSync(path, "utf8");
+            const perms = [
+              "android.permission.RECORD_AUDIO",
+              "android.permission.MODIFY_AUDIO_SETTINGS",
+              "android.permission.CAMERA",
+              "android.permission.FLASHLIGHT",
+              "android.permission.ACCESS_FINE_LOCATION",
+              "android.permission.ACCESS_COARSE_LOCATION",
+              "android.permission.VIBRATE",
+              "android.permission.WAKE_LOCK"
+            ].map(p => `<uses-permission android:name="${p}" />`).join("\n    ");
+            xml = xml.replace("</manifest>", `    ${perms}\n</manifest>`);
+            fs.writeFileSync(path, xml, "utf8");
+          '
 
       - name: Compile APK with Gradle
         run: |
@@ -50,20 +66,18 @@ jobs:
 
       - name: Prepare APK File
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk MJ-AI-Agent.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk ./MJ-AI-Agent.apk
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: MJ-AI-Agent-APK
-          path: MJ-AI-Agent.apk
+          path: ./MJ-AI-Agent.apk
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag' || github.event_name == 'push'
         with:
-          tag_name: v1.0.0
-          name: "MJ AI Agent v1.0.0"
-          body: "Official Android APK for MJ AI Agent. Download and install directly on your phone!"
-          files: MJ-AI-Agent.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: v1.0.${{ github.run_number }}
+          name: MJ AI Agent v1.0.${{ github.run_number }}
+          files: ./MJ-AI-Agent.apk
