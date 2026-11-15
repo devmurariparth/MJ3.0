@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MJ — Next-Gen Liquid Glass AI Agent</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d47ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MJ AI">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-black: #000000;
+      --horizon-blue: #0d47ff;
+      --horizon-cyan: #00a8ff;
+      --glass-fill: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(255, 255, 255, 0.22);
+      --glass-highlight: rgba(255, 255, 255, 0.45);
+      --text-white: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.58);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background: #000000;
+      color: var(--text-white);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Phone Frame on Desktop, Fullscreen on Mobile */
+    .phone-frame {
+      position: relative;
+      width: 100%;
+      max-width: 430px;
+      height: 94vh;
+      max-height: 900px;
+      background: #000000;
+      border-radius: 48px;
+      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow:
+        0 35px 90px rgba(0, 0, 0, 0.95),
+        0 0 60px rgba(13, 71, 255, 0.22),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 500px) {
+      .phone-frame {
+        max-width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+    }
+
+    /* Deep Horizon Blue Glow */
+    .horizon-glow {
+      position: absolute;
+      left: -20%;
+      right: -20%;
+      bottom: -18%;
+      height: 62%;
+      background: radial-gradient(ellipse at 50% 85%,
+        rgba(35, 130, 255, 0.85) 0%,
+        rgba(12, 62, 210, 0.52) 38%,
+        rgba(4, 20, 75, 0.2) 68%,
+        transparent 85%);
+      filter: blur(30px);
+      pointer-events: none;
+      z-index: 0;
+      transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .horizon-glow.searching {
+      height: 72%;
+      background: radial-gradient(ellipse at 50% 80%,
+        rgba(0, 195, 255, 0.95) 0%,
+        rgba(20, 85, 255, 0.6) 42%,
+        transparent 85%);
+    }
+
+    /* Top Minimal Navigation Bar */
+    .top-bar {
+      position: relative;
+      z-index: 20;
+      padding: 18px 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(20px);
+      padding: 4px;
+      border-radius: 99px;
+    }
+
+    .nav-tab {
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 0.76rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.65);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .nav-tab.active {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .circle-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(16px);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .circle-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: scale(1.05);
+    }
+
+    .circle-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    /* ==========================================
+       VIEW 1: VIDEO-STYLE 3D ORB & GLASS SHEET
+    ========================================== */
+    .view-panel {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .view-panel.active {
+      display: flex;
+    }
+
+    /* 3D Ribbon Sphere Stage */
+    .orb-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .orb-wrapper {
+      position: relative;
+      width: 190px;
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    #ribbonCanvas {
+      width: 190px;
+      height: 190px;
+    }
+
+    /* Center Typography */
+    .hero-copy {
+      text-align: center;
+      margin-top: 18px;
+      padding: 0 28px;
+      transition: all 0.45s ease;
+    }
+
+    .greeting-sub {
+      font-size: 0.92rem;
+      font-weight: 400;
+      color: rgba(200, 220, 255, 0.72);
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .greeting-main {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.18;
+      letter-spacing: -0.4px;
+      background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Morphing "Great! Here is what I found" text */
+    .found-copy {
+      position: absolute;
+      top: 255px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(15px);
+      pointer-events: none;
+      transition: all 0.45s ease;
+    }
+
+    .found-copy.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .found-copy h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 600;
+      line-height: 1.2;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.25) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Bottom Morphing Liquid Glass Pill */
+    .bottom-dock {
+      margin-top: auto;
+      padding: 16px 22px 28px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      z-index: 12;
+    }
+
+    .morph-pill {
+      width: 100%;
+      height: 58px;
+      border-radius: 99px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow:
+        0 12px 35px rgba(0, 15, 60, 0.6),
+        0 0 25px rgba(30, 130, 255, 0.25),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      display: flex;
+      align-items: center;
+      padding: 0 18px 0 22px;
+      transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+
+    .morph-pill.searching-mode {
+      width: 190px;
+      height: 52px;
+      justify-content: center;
+      padding: 0 20px;
+      border-color: rgba(120, 200, 255, 0.55);
+      box-shadow:
+        0 10px 30px rgba(0, 110, 255, 0.45),
+        inset 0 1.5px 2px rgba(255, 255, 255, 0.6);
+    }
+
+    .pill-input-wrap {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .morph-pill.searching-mode .pill-input-wrap {
+      display: none;
+    }
+
+    .searching-indicator {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .morph-pill.searching-mode .searching-indicator {
+      display: flex;
+    }
+
+    .pulse-dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .pulse-dots span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #7cc4ff;
+      animation: dotBlink 1s infinite alternate;
+    }
+    .pulse-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .pulse-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dotBlink {
+      from { opacity: 0.25; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1.2); }
+    }
+
+    .ask-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 400;
+      user-select: text;
+    }
+
+    .ask-input::placeholder {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .wave-trigger-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      opacity: 0.85;
+      transition: 0.2s;
+    }
+
+    .wave-trigger-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* =========================================================
+       SLIDE-UP FROSTED LIQUID GLASS SHEET
+    ========================================================= */
+    .frosted-sheet {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 76px;
+      bottom: 22px;
+      z-index: 15;
+      border-radius: 34px;
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.13) 0%, rgba(15, 28, 55, 0.58) 50%, rgba(10, 22, 48, 0.78) 100%);
+      backdrop-filter: blur(38px) saturate(190%);
+      -webkit-backdrop-filter: blur(38px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.75),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.55),
+        inset 0 -1px 2px rgba(80, 165, 255, 0.35);
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      transform: translateY(112%);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.65s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .frosted-sheet.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .sheet-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .user-query-pill {
+      align-self: flex-end;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: #fff;
+      max-width: 82%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sheet-scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scrollbar-width: none;
+    }
+    .sheet-scroll-body::-webkit-scrollbar { display: none; }
+
+    .mj-answer-text {
+      font-size: 0.92rem;
+      line-height: 1.56;
+      color: rgba(255, 255, 255, 0.92);
+      user-select: text;
+    }
+
+    /* Action Badge inside Sheet */
+    .exec-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      background: rgba(0, 210, 255, 0.16);
+      border: 1px solid rgba(0, 210, 255, 0.45);
+      color: #7ce8ff;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    /* Visual Showcase Cards inside Sheet */
+    .visual-cards-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 4px 0;
+      scrollbar-width: none;
+    }
+    .visual-cards-row::-webkit-scrollbar { display: none; }
+
+    .mini-glass-card {
+      min-width: 135px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .mini-glass-card:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .mini-card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mini-card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .mini-card-sub {
+      font-size: 0.68rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .sheet-followup {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 99px;
+      padding: 6px 10px 6px 16px;
+      align-items: center;
+    }
+
+    .sheet-followup input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.86rem;
+      user-select: text;
+    }
+
+    /* ====================================================
+       VIEW 2: BENTO AI HUB
+    ==================================================== */
+    .hub-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      scrollbar-width: none;
+    }
+    .hub-scroll::-webkit-scrollbar { display: none; }
+
+    .hub-hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .hub-hero p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .engine-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .engine-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.11), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 22px;
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .engine-card.selected {
+      background: linear-gradient(145deg, rgba(0, 168, 255, 0.28), rgba(13, 71, 255, 0.18));
+      border-color: rgba(0, 195, 255, 0.65);
+      box-shadow: 0 8px 22px rgba(0, 140, 255, 0.25);
+    }
+
+    .engine-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #7cc4ff;
+    }
+
+    .engine-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .bento-box {
+      background: linear-gradient(155deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 24px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .bento-box:hover {
+      border-color: rgba(120, 200, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .bento-box.tall {
+      grid-row: span 2;
+      background: linear-gradient(160deg, rgba(0, 168, 255, 0.22), rgba(120, 60, 255, 0.16));
+    }
+
+    .bento-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7cc4ff;
+    }
+
+    .bento-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .bento-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .suggestion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .suggestion-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .suggestion-row:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ====================================================
+       VIEW 3: PARTICLE VOICE CHAT
+    ==================================================== */
+    .voice-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px 30px;
+      text-align: center;
+    }
+
+    .voice-status-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #a5d8ff;
+      letter-spacing: 0.5px;
+    }
+
+    #particleCanvas {
+      width: 220px;
+      height: 220px;
+      cursor: pointer;
+    }
+
+    .voice-headline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      line-height: 1.35;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 290px;
+    }
+
+    .voice-headline b {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .voice-bars {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+    }
+
+    .voice-bars span {
+      width: 5px;
+      height: 10px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.35);
+      transition: 0.2s;
+    }
+
+    .voice-bars.speaking span {
+      background: #00d2ff;
+      animation: barJump 0.5s infinite ease-in-out alternate;
+    }
+    .voice-bars.speaking span:nth-child(2) { animation-delay: 0.1s; }
+    .voice-bars.speaking span:nth-child(3) { animation-delay: 0.25s; }
+    .voice-bars.speaking span:nth-child(4) { animation-delay: 0.15s; }
+    .voice-bars.speaking span:nth-child(5) { animation-delay: 0.3s; }
+
+    @keyframes barJump {
+      from { height: 8px; }
+      to { height: 32px; }
+    }
+
+    .voice-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 26px;
+      width: 100%;
+    }
+
+    .red-mic-orb {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      box-shadow: 0 12px 30px rgba(255, 65, 108, 0.55);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .red-mic-orb.active {
+      animation: pulseRed 1s infinite alternate;
+    }
+
+    @keyframes pulseRed {
+      from { transform: scale(1); box-shadow: 0 0 20px rgba(255, 65, 108, 0.6); }
+      to { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 65, 108, 0.95); }
+    }
+
+    .voice-timer {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.75);
+      margin-top: -8px;
+    }
+
+    /* Settings Modal */
+    .settings-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0, 4, 15, 0.82);
+      backdrop-filter: blur(25px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .settings-modal.open {
+      display: flex;
+    }
+
+    .settings-card {
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: rgba(14, 22, 46, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+    }
+
+    .settings-card h3 {
+      font-family: 'Outfit', sans-serif;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+
+    .field-lbl {
+      display: block;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin: 10px 0 4px;
+    }
+
+    .field-inp {
+      width: 100%;
+      padding: 10px 13px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      outline: none;
+      font-size: 0.84rem;
+      user-select: text;
+    }
+
+    .field-inp:focus {
+      border-color: #00c6ff;
+    }
+
+    .modal-btns {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .m-btn {
+      padding: 9px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .m-btn.save {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="phone-frame">
+    <!-- Deep Horizon Blue Glow -->
+    <div class="horizon-glow" id="horizonGlow"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+      <button class="circle-btn" onclick="closeSheetAndReset()" title="Home Orb">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M12 3a9 9 0 0 1 9 9"></path>
+        </svg>
+      </button>
+
+      <div class="nav-pills">
+        <button class="nav-tab active" id="tabOrb" onclick="switchView('orb')">Orb AI</button>
+        <button class="nav-tab" id="tabHub" onclick="switchView('hub')">AI Hub</button>
+        <button class="nav-tab" id="tabVoice" onclick="switchView('voice')">Voice</button>
+      </div>
+
+      <button class="circle-btn" onclick="openSettings()" title="Brain & Profile Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- ==========================================
+         VIEW 1: VIDEO-STYLE 3D RIBBON ORB & SHEET
+    =========================================== -->
+    <section class="view-panel active" id="viewOrb">
+      <div class="orb-stage" id="orbStage">
+        <div class="orb-wrapper" onclick="startVoiceFromOrb()" title="Tap Orb to Speak">
+          <canvas id="ribbonCanvas" width="380" height="380"></canvas>
+        </div>
+
+        <div class="hero-copy" id="heroCopy">
+          <div class="greeting-sub" id="greetingSub">Hello Boss</div>
+          <h1 class="greeting-main">How can I help<br>you today?</h1>
+        </div>
+      </div>
+
+      <!-- Intermediate Reveal ("Great! Here is what I found") -->
+      <div class="found-copy" id="foundCopy">
+        <h2>Great!<br>Here is what<br>I found</h2>
+      </div>
+
+      <!-- Slide-Up Frosted Liquid Glass Result Sheet -->
+      <div class="frosted-sheet" id="resultSheet">
+        <div class="sheet-top-bar">
+          <button class="sheet-close-btn" onclick="closeSheetAndReset()" title="Minimize">✕</button>
+          <div class="user-query-pill" id="sheetQueryPill">Command</div>
+        </div>
+
+        <div class="sheet-scroll-body" id="sheetBody">
+          <div class="mj-answer-text" id="sheetAnswerText"></div>
+
+          <!-- Quick Interactive Action Cards inside Sheet -->
+          <div class="visual-cards-row">
+            <div class="mini-glass-card" onclick="triggerPrompt('Open YouTube')">
+              <div class="mini-card-icon">▶</div>
+              <div class="mini-card-title">YouTube</div>
+              <div class="mini-card-sub">Launch & Search</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('Open WhatsApp')">
+              <div class="mini-card-icon">💬</div>
+              <div class="mini-card-title">WhatsApp</div>
+              <div class="mini-card-sub">Direct Message</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('Turn on Flashlight')">
+              <div class="mini-card-icon">⚡</div>
+              <div class="mini-card-title">Flashlight</div>
+              <div class="mini-card-sub">Hardware Torch</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('Record screen')">
+              <div class="mini-card-icon" style="background: linear-gradient(135deg, #ff416c, #ff4b2b);">🎥</div>
+              <div class="mini-card-title">Screen Record</div>
+              <div class="mini-card-sub">Live Capture</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('Open Accessibility')">
+              <div class="mini-card-icon" style="background: linear-gradient(135deg, #8a2387, #e94057);">🛡️</div>
+              <div class="mini-card-title">Accessibility</div>
+              <div class="mini-card-sub">Deep Services</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('Wake lock on')">
+              <div class="mini-card-icon" style="background: linear-gradient(135deg, #11998e, #38ef7d);">🔋</div>
+              <div class="mini-card-title">Stay Awake</div>
+              <div class="mini-card-sub">Background Mode</div>
+            </div>
+            <div class="mini-glass-card" onclick="triggerPrompt('My Location')">
+              <div class="mini-card-icon" style="background: linear-gradient(135deg, #f857a6, #ff5858);">📍</div>
+              <div class="mini-card-title">GPS Location</div>
+              <div class="mini-card-sub">Google Maps</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sheet-followup">
+          <input type="text" id="followupInput" placeholder="Ask follow-up or command..." onkeydown="if(event.key==='Enter') submitFollowup()" />
+          <button class="wave-trigger-btn" onclick="submitFollowup()">➤</button>
+        </div>
+      </div>
+
+      <!-- Bottom Morphing Glass Input Pill -->
+      <div class="bottom-dock">
+        <div class="morph-pill" id="morphPill">
+          <div class="pill-input-wrap">
+            <input
+              type="text"
+              id="mainAskInput"
+              class="ask-input"
+              placeholder="Ask anything..."
+              onkeydown="if(event.key==='Enter') submitMainQuery()"
+            />
+            <button class="wave-trigger-btn" onclick="startVoiceFromOrb()" title="Voice Input">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="4" y1="10" x2="4" y2="14"></line>
+                <line x1="8" y1="6" x2="8" y2="18"></line>
+                <line x1="12" y1="3" x2="12" y2="21"></line>
+                <line x1="16" y1="6" x2="16" y2="18"></line>
+                <line x1="20" y1="10" x2="20" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="searching-indicator">
+            <div class="pulse-dots"><span></span><span></span><span></span></div>
+            <span id="searchingLabel">Searching...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: BENTO AI HUB
+    =========================================== -->
+    <section class="view-panel" id="viewHub">
+      <div class="hub-scroll">
+        <div class="hub-hero">
+          <h1 id="hubTitle">Hi, Boss!</h1>
+          <p>Ask Anything, Control Your Phone Instantly</p>
+        </div>
+
+        <!-- 3 AI Model Selector Cards (Gemini + Groq + OpenRouter) -->
+        <div class="engine-grid">
+          <div class="engine-card selected" id="engGemini" onclick="selectEngine('gemini')">
+            <div class="engine-icon">✦</div>
+            <div class="engine-name">Gemini 2.5</div>
+          </div>
+          <div class="engine-card" id="engGroq" onclick="selectEngine('groq')">
+            <div class="engine-icon">⚡</div>
+            <div class="engine-name">Groq 3.3</div>
+          </div>
+          <div class="engine-card" id="engOpenRouter" onclick="selectEngine('openrouter')">
+            <div class="engine-icon">🌐</div>
+            <div class="engine-name">OpenRouter</div>
+          </div>
+        </div>
+
+        <!-- Elite Tools Bento Grid -->
+        <div class="section-head">
+          <span>Elite Android Tools</span>
+          <span style="font-size:0.74rem;color:#7cc4ff;">Deep System Access</span>
+        </div>
+
+        <div class="bento-grid">
+          <div class="bento-box tall" onclick="switchView('voice')">
+            <div class="bento-badge">🎙️</div>
+            <div>
+              <div class="bento-title">Live Voice Agent</div>
+              <div class="bento-desc">Hands-free natural voice control with 3D particle sphere</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Record screen')">
+            <div class="bento-badge">🎥</div>
+            <div>
+              <div class="bento-title">Screen Recorder</div>
+              <div class="bento-desc">Live screen recording & video auto-save</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Open Accessibility')">
+            <div class="bento-badge">🛡️</div>
+            <div>
+              <div class="bento-title">Accessibility</div>
+              <div class="bento-desc">System Accessibility Services & bridge</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Wake lock on')">
+            <div class="bento-badge">⚡</div>
+            <div>
+              <div class="bento-title">Background Stay-Awake</div>
+              <div class="bento-desc">Always-on Wake Lock for persistent tasks</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Open Developer Options')">
+            <div class="bento-badge">🛠️</div>
+            <div>
+              <div class="bento-title">Developer Options</div>
+              <div class="bento-desc">USB debugging & deep OS telemetry</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Start Asking Suggestions -->
+        <div class="section-head">
+          <span>Smart System Shortcuts</span>
+        </div>
+
+        <div class="suggestion-list">
+          <div class="suggestion-row" onclick="triggerPrompt('Open Display Over Other Apps')">
+            <div class="bento-badge">🪟</div>
+            <div>
+              <div class="bento-title">Display Over Other Apps</div>
+              <div class="bento-desc">Floating overlay permission settings</div>
+            </div>
+          </div>
+
+          <div class="suggestion-row" onclick="triggerPrompt('Battery Optimization')">
+            <div class="bento-badge">🔋</div>
+            <div>
+              <div class="bento-title">Battery Optimization Bypass</div>
+              <div class="bento-desc">Prevent Android OS from sleeping MJ background services</div>
+            </div>
+          </div>
+
+          <div class="suggestion-row" onclick="triggerPrompt('My Location')">
+            <div class="bento-badge">📍</div>
+            <div>
+              <div class="bento-title">Live GPS Location</div>
+              <div class="bento-desc">Locate device & open live coordinates in Google Maps</div>
+            </div>
+          </div>
+
+          <div class="suggestion-row" onclick="triggerPrompt('Open WhatsApp')">
+            <div class="bento-badge">💬</div>
+            <div>
+              <div class="bento-title">WhatsApp Automation</div>
+              <div class="bento-desc">Direct messaging & contact bridges</div>
+            </div>
+          </div>
+
+          <div class="suggestion-row" onclick="triggerPrompt('Open Wi-Fi Settings')">
+            <div class="bento-badge">📶</div>
+            <div>
+              <div class="bento-title">Network & Wi-Fi</div>
+              <div class="bento-desc">Jump straight to system Wi-Fi settings</div>
+            </div>
+          </div>
+
+          <div class="suggestion-row" onclick="triggerPrompt('Open YouTube')">
+            <div class="bento-badge">▶</div>
+            <div>
+              <div class="bento-title">Launch YouTube</div>
+              <div class="bento-desc">Open YouTube app or search videos directly</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: PARTICLE VOICE CHAT
+    =========================================== -->
+    <section class="view-panel" id="viewVoice">
+      <div class="voice-screen">
+        <div class="voice-status-label" id="voiceStateLabel">Tap Mic to Speak...</div>
+
+        <!-- 3D Dotted Halftone Particle Sphere -->
+        <canvas id="particleCanvas" width="440" height="440" onclick="toggleVoiceSession()"></canvas>
+
+        <div class="voice-headline">
+          Speak Naturally As<br><b>MJ Listens And<br>Responds Instantly</b>
+        </div>
+
+        <div class="voice-bars" id="voiceBars">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="voice-controls-row">
+          <button class="circle-btn" onclick="stopVoiceSession()" title="Cancel">✕</button>
+          <button class="red-mic-orb" id="redMicBtn" onclick="toggleVoiceSession()" title="Start/Stop Voice">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+            </svg>
+          </button>
+          <button class="circle-btn" onclick="switchView('orb')" title="Done">✓</button>
+        </div>
+
+        <div class="voice-timer" id="voiceTimer">00:00</div>
+      </div>
+    </section>
+
+    <!-- Settings Modal (Gemini + Groq + OpenRouter + User Profile) -->
+    <div class="settings-modal" id="settingsModal">
+      <div class="settings-card">
+        <h3>⚙️ MJ AI Brain & Profile</h3>
+
+        <label class="field-lbl">Your Name / Google Profile Name</label>
+        <input type="text" id="userNameInp" class="field-inp" placeholder="e.g. Boss / Mukeshbhai" />
+
+        <label class="field-lbl">Google Gemini API Key (Primary Brain)</label>
+        <input type="password" id="geminiKey" class="field-inp" placeholder="AIzaSy..." />
+
+        <label class="field-lbl">Groq Cloud API Key (Ultra-Fast Brain)</label>
+        <input type="password" id="groqKey" class="field-inp" placeholder="gsk_..." />
+
+        <label class="field-lbl">OpenRouter API Key (Multi-Model Brain)</label>
+        <input type="password" id="openrouterKey" class="field-inp" placeholder="sk-or-v1-..." />
+
+        <label class="field-lbl">Voice Language</label>
+        <select id="voiceLang" class="field-inp" style="background:#0d152c;">
+          <option value="gu-IN">Gujarati (ગુજરાતી)</option>
+          <option value="hi-IN">Hindi (हिन्दी)</option>
+          <option value="en-IN">English (India)</option>
+        </select>
+
+        <div class="modal-btns">
+          <button class="m-btn" onclick="closeSettings()">Close</button>
+          <button class="m-btn save" onclick="saveSettings()">Save & Activate</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+
+    /* =========================================================
+       0. SAFE STORAGE ENGINE (PREVENTS BRAVE file:// ERRORS)
+    ========================================================= */
+    const MJSafeStore = {
+      _mem: {},
+      get(key) {
+        try {
+          return localStorage.getItem(key) || this._mem[key] || '';
+        } catch (e) {
+          return this._mem[key] || '';
+        }
+      },
+      set(key, val) {
+        this._mem[key] = val;
+        try {
+          localStorage.setItem(key, val);
+        } catch (e) {}
+      }
+    };
+
+    /* =========================================================
+       1. VIDEO-STYLE 3D GLOWING RIBBON SPHERE (CANVAS ENGINE)
+    ========================================================= */
+    const rCanvas = document.getElementById('ribbonCanvas');
+    const rCtx = rCanvas.getContext('2d');
+    let ribbonSpeed = 0.022;
+    let ribbonPhase = 0;
+
+    function drawRibbonOrb() {
+      const w = rCanvas.width;
+      const h = rCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = 128;
+
+      rCtx.clearRect(0, 0, w, h);
+      ribbonPhase += ribbonSpeed;
+
+      // 1. Deep Ambient Blue Sphere Halo
+      const halo = rCtx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius * 1.38);
+      halo.addColorStop(0, 'rgba(15, 75, 255, 0.35)');
+      halo.addColorStop(0.6, 'rgba(0, 140, 255, 0.18)');
+      halo.addColorStop(1, 'transparent');
+      rCtx.fillStyle = halo;
+      rCtx.beginPath();
+      rCtx.arc(cx, cy, radius * 1.38, 0, Math.PI * 2);
+      rCtx.fill();
+
+      // 2. Dark Translucent Sphere Core
+      const coreGrad = rCtx.createRadialGradient(cx - 35, cy - 35, 15, cx, cy, radius);
+      coreGrad.addColorStop(0, 'rgba(30, 90, 220, 0.38)');
+      coreGrad.addColorStop(0.55, 'rgba(6, 18, 52, 0.88)');
+      coreGrad.addColorStop(1, 'rgba(2, 8, 28, 0.96)');
+      rCtx.fillStyle = coreGrad;
+      rCtx.beginPath();
+      rCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      rCtx.fill();
+
+      // 3. 3D Sweeping Light Trails (Ribbons)
+      rCtx.save();
+      rCtx.beginPath();
+      rCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      rCtx.clip();
+      rCtx.globalCompositeOperation = 'screen';
+
+      const ribbonConfigs = [
+        { tiltX: 0.55, tiltY: 0.35, speedMult: 1.0, width: 14, color: 'rgba(60, 165, 255, 0.85)' },
+        { tiltX: -0.45, tiltY: 0.65, speedMult: -0.8, width: 10, color: 'rgba(140, 215, 255, 0.75)' },
+        { tiltX: 0.2, tiltY: -0.6, speedMult: 1.3, width: 8, color: 'rgba(0, 110, 255, 0.7)' }
+      ];
+
+      let flareX = cx + radius * 0.7;
+      let flareY = cy - radius * 0.2;
+
+      ribbonConfigs.forEach((cfg, idx) => {
+        rCtx.beginPath();
+        const steps = 80;
+        for (let i = 0; i <= steps; i++) {
+          const t = (i / steps) * Math.PI * 2;
+          const angle = t + ribbonPhase * cfg.speedMult;
+
+          const x3d = Math.cos(angle) * radius;
+          const y3d = Math.sin(angle) * radius * Math.sin(cfg.tiltX + Math.cos(ribbonPhase * 0.5) * 0.25);
+          const z3d = Math.sin(angle) * radius * Math.cos(cfg.tiltY);
+
+          const scale = 1 + (z3d / (radius * 2.6));
+          const px = cx + x3d * scale * 0.88;
+          const py = cy + y3d * scale * 0.88;
+
+          if (i === 0) rCtx.moveTo(px, py);
+          else rCtx.lineTo(px, py);
+
+          if (idx === 0 && i === 22) {
+            flareX = px;
+            flareY = py;
+          }
+        }
+
+        rCtx.strokeStyle = cfg.color;
+        rCtx.lineWidth = cfg.width;
+        rCtx.shadowColor = '#38b6ff';
+        rCtx.shadowBlur = 22;
+        rCtx.stroke();
+
+        rCtx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+        rCtx.lineWidth = 2.2;
+        rCtx.stroke();
+      });
+
+      // 4. Specular Star Flare on Ribbon
+      const flare = rCtx.createRadialGradient(flareX, flareY, 1, flareX, flareY, 26);
+      flare.addColorStop(0, '#ffffff');
+      flare.addColorStop(0.3, 'rgba(160, 230, 255, 0.9)');
+      flare.addColorStop(1, 'transparent');
+      rCtx.fillStyle = flare;
+      rCtx.beginPath();
+      rCtx.arc(flareX, flareY, 26, 0, Math.PI * 2);
+      rCtx.fill();
+
+      rCtx.restore();
+
+      // 5. Outer Specular Rim Highlight
+      rCtx.strokeStyle = 'rgba(150, 215, 255, 0.42)';
+      rCtx.lineWidth = 2;
+      rCtx.beginPath();
+      rCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      rCtx.stroke();
+
+      requestAnimationFrame(drawRibbonOrb);
+    }
+    drawRibbonOrb();
+
+    /* =========================================================
+       2. IMAGE-STYLE 3D HALFTONE PARTICLE SPHERE (VOICE VIEW)
+    ========================================================= */
+    const pCanvas = document.getElementById('particleCanvas');
+    const pCtx = pCanvas.getContext('2d');
+    let pAngle = 0;
+    let voicePulseAmp = 0;
+
+    function drawParticleSphere() {
+      const w = pCanvas.width;
+      const h = pCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const rad = 155;
+
+      pCtx.clearRect(0, 0, w, h);
+      pAngle += 0.015;
+
+      const latSteps = 22;
+      const lonSteps = 44;
+
+      for (let i = 1; i < latSteps; i++) {
+        const theta = (i / latSteps) * Math.PI;
+        const sinTheta = Math.sin(theta);
+        const cosTheta = Math.cos(theta);
+
+        for (let j = 0; j < lonSteps; j++) {
+          const phi = (j / lonSteps) * Math.PI * 2 + pAngle;
+          const wave = Math.sin(theta * 5 + pAngle * 3) * voicePulseAmp;
+          const r = rad + wave;
+
+          const x = r * sinTheta * Math.cos(phi);
+          const y = r * cosTheta;
+          const z = r * sinTheta * Math.sin(phi);
+
+          if (z > -rad * 0.45) {
+            const depth = (z + rad) / (2 * rad);
+            const dotSize = Math.max(1.2, depth * 4.2);
+
+            const hue = 195 + (y / rad) * 45 + (x / rad) * 25;
+            pCtx.fillStyle = `hsla(${hue}, 95%, 62%, ${depth * 0.95})`;
+            pCtx.beginPath();
+            pCtx.arc(cx + x, cy + y, dotSize, 0, Math.PI * 2);
+            pCtx.fill();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawParticleSphere);
+    }
+    drawParticleSphere();
+
+    /* =========================================================
+       3. VIEW NAVIGATION & PROFILE INITIALIZATION
+    ========================================================= */
+    let activeEngine = 'gemini';
+    let torchStream = null;
+    let wakeLockSentinel = null;
+    let screenRecorder = null;
+    let screenRecordChunks = [];
+    let voiceTimerInterval = null;
+    let voiceSeconds = 0;
+    let activeRecognition = null;
+
+    function loadSavedSettings() {
+      const savedName = MJSafeStore.get('mj_user_name') || 'Boss';
+      document.getElementById('userNameInp').value = MJSafeStore.get('mj_user_name') || '';
+      document.getElementById('geminiKey').value = MJSafeStore.get('mj_gemini_key') || '';
+      document.getElementById('groqKey').value = MJSafeStore.get('mj_groq_key') || '';
+      document.getElementById('openrouterKey').value = MJSafeStore.get('mj_openrouter_key') || '';
+      document.getElementById('voiceLang').value = MJSafeStore.get('mj_lang') || 'gu-IN';
+
+      document.getElementById('greetingSub').innerText = `Hello ${savedName}`;
+      document.getElementById('hubTitle').innerText = `Hi, ${savedName}!`;
+    }
+    loadSavedSettings();
+
+    function switchView(view) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+      if (view === 'orb') {
+        document.getElementById('viewOrb').classList.add('active');
+        document.getElementById('tabOrb').classList.add('active');
+      } else if (view === 'hub') {
+        document.getElementById('viewHub').classList.add('active');
+        document.getElementById('tabHub').classList.add('active');
+      } else if (view === 'voice') {
+        document.getElementById('viewVoice').classList.add('active');
+        document.getElementById('tabVoice').classList.add('active');
+      }
+    }
+
+    function selectEngine(eng) {
+      activeEngine = eng;
+      document.querySelectorAll('.engine-card').forEach(c => c.classList.remove('selected'));
+      if (eng === 'gemini') document.getElementById('engGemini').classList.add('selected');
+      if (eng === 'groq') document.getElementById('engGroq').classList.add('selected');
+      if (eng === 'openrouter') document.getElementById('engOpenRouter').classList.add('selected');
+    }
+
+    function closeSheetAndReset() {
+      switchView('orb');
+      document.getElementById('resultSheet').classList.remove('open');
+      document.getElementById('foundCopy').classList.remove('show');
+      document.getElementById('heroCopy').style.opacity = '1';
+      document.getElementById('morphPill').classList.remove('searching-mode');
+      document.getElementById('horizonGlow').classList.remove('searching');
+      ribbonSpeed = 0.022;
+    }
+
+    function triggerPrompt(text) {
+      switchView('orb');
+      document.getElementById('mainAskInput').value = text;
+      submitMainQuery();
+    }
+
+    function submitFollowup() {
+      const inp = document.getElementById('followupInput');
+      const val = inp.value.trim();
+      if (!val) return;
+      inp.value = '';
+      document.getElementById('resultSheet').classList.remove('open');
+      setTimeout(() => {
+        document.getElementById('mainAskInput').value = val;
+        submitMainQuery();
+      }, 300);
+    }
+
+    /* =========================================================
+       4. DYNAMIC APP EXTRACTOR + DEEP ANDROID INTENT ENGINE
+    ========================================================= */
+
+    // 1. Dynamically extract ANY app name from English, Gujarati, or Hinglish
+    function extractDynamicAppName(query) {
+      const cleaned = query.trim();
+
+      const engMatch = cleaned.match(/^(?:please\s+)?(?:open|launch|start|run)\s+(.+?)(?:\s+app|\s+application)?$/i);
+      if (engMatch && engMatch[1]) {
+        return engMatch[1].trim();
+      }
+
+      const localMatch = cleaned.match(/^(.+?)\s+(?:એપ\s+)?(?:ખોલ|ખોલો|ચાલુ\s*કર|ચાલુ\s*કરો|open\s*kar|open\s*karo|chalu\s*kar)$/i);
+      if (localMatch && localMatch[1]) {
+        return localMatch[1].trim();
+      }
+
+      return null;
+    }
+
+    // 2. Resolve any app name into an Android Package / System Intent dynamically
+    function resolveDynamicIntent(appName, aiPackage = '') {
+      const raw = (appName || '').toLowerCase().trim();
+      const slug = raw.replace(/[^a-z0-9]/g, '');
+
+      const systemActions = {
+        camera: 'intent:#Intent;action=android.media.action.IMAGE_CAPTURE;end',
+        wifi: 'intent:#Intent;action=android.settings.WIFI_SETTINGS;end',
+        bluetooth: 'intent:#Intent;action=android.settings.BLUETOOTH_SETTINGS;end',
+        settings: 'intent:#Intent;action=android.settings.SETTINGS;end',
+        hotspot: 'intent:#Intent;action=android.settings.TETHER_SETTINGS;end',
+        alarm: 'intent:#Intent;action=android.intent.action.SET_ALARM;end',
+        clock: 'intent:#Intent;action=android.intent.action.SHOW_ALARMS;end',
+        contacts: 'intent:#Intent;action=android.intent.action.VIEW;type=vnd.android.cursor.dir/contact;end',
+        dialer: 'tel:',
+        phone: 'tel:',
+        gallery: 'intent:#Intent;action=android.intent.action.VIEW;type=image/*;end',
+        calculator: 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_CALCULATOR;end',
+        calendar: 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_CALENDAR;end',
+        files: 'intent:#Intent;action=android.intent.action.GET_CONTENT;type=*/*;end',
+        accessibility: 'intent:#Intent;action=android.settings.ACCESSIBILITY_SETTINGS;end',
+        developer: 'intent:#Intent;action=android.settings.APPLICATION_DEVELOPMENT_SETTINGS;end',
+        developeroptions: 'intent:#Intent;action=android.settings.APPLICATION_DEVELOPMENT_SETTINGS;end',
+        overlay: 'intent:#Intent;action=android.settings.action.MANAGE_OVERLAY_PERMISSION;end',
+        displayoverapps: 'intent:#Intent;action=android.settings.action.MANAGE_OVERLAY_PERMISSION;end',
+        notificationaccess: 'intent:#Intent;action=android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;end',
+        notificationlistener: 'intent:#Intent;action=android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;end',
+        batterysaver: 'intent:#Intent;action=android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS;end',
+        batteryoptimization: 'intent:#Intent;action=android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS;end',
+        location: 'intent:#Intent;action=android.settings.LOCATION_SOURCE_SETTINGS;end',
+        gps: 'intent:#Intent;action=android.settings.LOCATION_SOURCE_SETTINGS;end',
+        sound: 'intent:#Intent;action=android.settings.SOUND_SETTINGS;end',
+        volume: 'intent:#Intent;action=android.settings.SOUND_SETTINGS;end',
+        display: 'intent:#Intent;action=android.settings.DISPLAY_SETTINGS;end',
+        brightness: 'intent:#Intent;action=android.settings.DISPLAY_SETTINGS;end',
+        apps: 'intent:#Intent;action=android.settings.APPLICATION_SETTINGS;end',
+        appsettings: 'intent:#Intent;action=android.settings.APPLICATION_SETTINGS;end',
+        deviceinfo: 'intent:#Intent;action=android.settings.DEVICE_INFO_SETTINGS;end',
+        aboutphone: 'intent:#Intent;action=android.settings.DEVICE_INFO_SETTINGS;end',
+        security: 'intent:#Intent;action=android.settings.SECURITY_SETTINGS;end',
+        nfc: 'intent:#Intent;action=android.settings.NFC_SETTINGS;end',
+        vpn: 'intent:#Intent;action=android.settings.VPN_SETTINGS;end',
+        airplanemode: 'intent:#Intent;action=android.settings.AIRPLANE_MODE_SETTINGS;end',
+        storage: 'intent:#Intent;action=android.settings.INTERNAL_STORAGE_SETTINGS;end',
+        allfiles: 'intent:#Intent;action=android.settings.MANAGE_ALL_FILES_ACCESS_PERMISSION;end',
+        keyboard: 'intent:#Intent;action=android.settings.INPUT_METHOD_SETTINGS;end',
+        datetime: 'intent:#Intent;action=android.settings.DATE_SETTINGS;end'
+      };
+
+      for (const [key, sysUri] of Object.entries(systemActions)) {
+        if (raw.includes(key)) {
+          return { isSystem: true, uri: sysUri, webUrl: `https://www.google.com/search?q=${encodeURIComponent(appName)}` };
+        }
+      }
+
+      const knownPackages = {
+        whatsapp: 'com.whatsapp',
+        whatsappbusiness: 'com.whatsapp.w4b',
+        youtube: 'com.google.android.youtube',
+        youtubemusic: 'com.google.android.apps.youtube.music',
+        instagram: 'com.instagram.android',
+        facebook: 'com.facebook.katana',
+        messenger: 'com.facebook.orca',
+        telegram: 'org.telegram.messenger',
+        snapchat: 'com.snapchat.android',
+        twitter: 'com.twitter.android',
+        x: 'com.twitter.android',
+        threads: 'com.instagram.barcelona',
+        linkedin: 'com.linkedin.android',
+        pinterest: 'com.pinterest',
+        reddit: 'com.reddit.frontpage',
+        discord: 'com.discord',
+        spotify: 'com.spotify.music',
+        jiosaavn: 'com.jio.media.jiobeats',
+        gaana: 'com.gaana',
+        wynk: 'com.bsbportal.music',
+        netflix: 'com.netflix.mediaclient',
+        primevideo: 'com.amazon.avod.thirdpartyclient',
+        hotstar: 'in.startv.hotstar',
+        jiocinema: 'com.jio.media.ondemand',
+        sonyliv: 'com.sonyliv',
+        zee5: 'com.graymatrix.did',
+        mxplayer: 'com.mxtech.videoplayer.ad',
+        vlc: 'org.videolan.vlc',
+        gpay: 'com.google.android.apps.nbu.paisa.user',
+        googlepay: 'com.google.android.apps.nbu.paisa.user',
+        phonepe: 'com.phonepe.app',
+        paytm: 'net.one97.paytm',
+        bhim: 'in.org.npci.upiapp',
+        cred: 'com.dreamplug.androidapp',
+        amazon: 'in.amazon.mShop.android.shopping',
+        flipkart: 'com.flipkart.android',
+        meesho: 'com.meesho.supply',
+        myntra: 'com.myntra.android',
+        ajio: 'com.ril.ajio',
+        nykaa: 'com.fsn.nykaa',
+        zomato: 'com.application.zomato',
+        swiggy: 'in.swiggy.android',
+        blinkit: 'com.grofers.customerapp',
+        zepto: 'com.zeptoconsumerapp',
+        bigbasket: 'com.bigbasket.mobileapp',
+        uber: 'com.ubercab',
+        ola: 'com.olacabs.customer',
+        rapido: 'com.rapido.passenger',
+        irctc: 'cris.org.in.prs.ima',
+        whereismytrain: 'com.whereismytrain.android',
+        makemytrip: 'com.makemytrip',
+        maps: 'com.google.android.apps.maps',
+        googlemaps: 'com.google.android.apps.maps',
+        chrome: 'com.android.chrome',
+        brave: 'com.brave.browser',
+        gmail: 'com.google.android.gm',
+        drive: 'com.google.android.apps.docs',
+        googledrive: 'com.google.android.apps.docs',
+        photos: 'com.google.android.apps.photos',
+        googlephotos: 'com.google.android.apps.photos',
+        keep: 'com.google.android.keep',
+        playstore: 'com.android.vending',
+        truecaller: 'com.truecaller',
+        myjio: 'com.jio.myjio',
+        airtel: 'com.myairtelapp',
+        vi: 'com.mventus.selfcare.activity',
+        chatgpt: 'com.openai.chatgpt',
+        gemini: 'com.google.android.apps.bard',
+        canva: 'com.canva.editor',
+        capcut: 'com.lemon.lvoverseas',
+        vn: 'com.frontrow.vlog',
+        inshot: 'com.camerasideas.instashot',
+        picsart: 'com.picsart.studio',
+        snapseed: 'com.niksoftware.snapseed',
+        lightroom: 'com.adobe.lrmobile',
+        bgmi: 'com.pubg.imobile',
+        freefire: 'com.dts.freefiremax',
+        ludo: 'com.ludo.king'
+      };
+
+      const finalPkg = (aiPackage && aiPackage.includes('.'))
+        ? aiPackage.trim()
+        : (knownPackages[slug] || `com.${slug}.android`);
+
+      const fallbackUrl = encodeURIComponent(`https://play.google.com/store/search?q=${encodeURIComponent(appName)}&c=apps`);
+
+      const intentUri = `intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${finalPkg};S.browser_fallback_url=${fallbackUrl};end`;
+
+      return {
+        isSystem: false,
+        pkg: finalPkg,
+        uri: intentUri,
+        webUrl: `https://www.google.com/search?q=${encodeURIComponent(appName)}`
+      };
+    }
+
+    async function submitMainQuery() {
+      const input = document.getElementById('mainAskInput');
+      const query = input.value.trim();
+      if (!query) return;
+      input.value = '';
+
+      const morphPill = document.getElementById('morphPill');
+      const heroCopy = document.getElementById('heroCopy');
+      const foundCopy = document.getElementById('foundCopy');
+      const resultSheet = document.getElementById('resultSheet');
+      const horizonGlow = document.getElementById('horizonGlow');
+
+      resultSheet.classList.remove('open');
+      heroCopy.style.opacity = '0';
+      morphPill.classList.add('searching-mode');
+      horizonGlow.classList.add('searching');
+      document.getElementById('searchingLabel').innerText = 'Searching...';
+      ribbonSpeed = 0.068;
+
+      const answerPromise = processCommand(query);
+
+      await new Promise(r => setTimeout(r, 600));
+      foundCopy.classList.add('show');
+
+      const finalResult = await answerPromise;
+
+      await new Promise(r => setTimeout(r, 500));
+      foundCopy.classList.remove('show');
+      document.getElementById('sheetQueryPill').innerText = query;
+      document.getElementById('sheetAnswerText').innerHTML = finalResult.html;
+      resultSheet.classList.add('open');
+      morphPill.classList.remove('searching-mode');
+      horizonGlow.classList.remove('searching');
+      ribbonSpeed = 0.025;
+
+      speakText(finalResult.speech);
+    }
+
+    // Dynamic Hardware & Android Intent Executor
+    async function triggerAndroidIntent(cmd) {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const intent = (cmd.intent || 'NONE').toUpperCase();
+      const target = cmd.target || '';
+      const value = cmd.value || '';
+      const pkg = cmd.pkg || '';
+
+      if (!intent || intent === 'NONE') return null;
+
+      try {
+        switch (intent) {
+          case 'OPEN_APP': {
+            const appInfo = resolveDynamicIntent(target, pkg);
+            if (isAndroid) {
+              window.location.href = appInfo.uri;
+            } else {
+              window.open(appInfo.webUrl, '_blank');
+            }
+            return `LAUNCHED: ${target.toUpperCase()}`;
+          }
+
+          case 'CALL': {
+            const num = (target || value).replace(/\D/g, '');
+            window.location.href = `tel:${num}`;
+            return `CALLING: ${num || 'DIALER'}`;
+          }
+
+          case 'WHATSAPP': {
+            const phone = target.replace(/\D/g, '');
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(value || 'Hello')}`, '_blank');
+            return `WHATSAPP READY`;
+          }
+
+          case 'YOUTUBE_PLAY': {
+            const q = encodeURIComponent(value || target);
+            if (isAndroid) {
+              window.location.href = `intent://results?search_query=${q}#Intent;scheme=https;package=com.google.android.youtube;S.browser_fallback_url=${encodeURIComponent('https://www.youtube.com/results?search_query=' + q)};end`;
+            } else {
+              window.open(`https://www.youtube.com/results?search_query=${q}`, '_blank');
+            }
+            return `YOUTUBE: ${(value || target).toUpperCase()}`;
+          }
+
+          case 'GOOGLE_SEARCH': {
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(value || target)}`, '_blank');
+            return `GOOGLE SEARCH`;
+          }
+
+          case 'ALARM': {
+            if (isAndroid) {
+              window.location.href = 'intent:#Intent;action=android.intent.action.SET_ALARM;end';
+            }
+            return `ALARM MANAGER`;
+          }
+
+          case 'SETTINGS': {
+            const sysInfo = resolveDynamicIntent(target || value || 'settings');
+            if (isAndroid) {
+              window.location.href = sysInfo.uri;
+            }
+            return `SYSTEM: ${(target || value || 'SETTINGS').toUpperCase()}`;
+          }
+
+          case 'TORCH': {
+            const isOff = (value || target).toLowerCase().includes('off');
+            if (!isOff) {
+              torchStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', torch: true } });
+              await torchStream.getVideoTracks()[0].applyConstraints({ advanced: [{ torch: true }] });
+              return 'FLASHLIGHT: ON';
+            } else if (torchStream) {
+              torchStream.getTracks().forEach(t => t.stop());
+              torchStream = null;
+              return 'FLASHLIGHT: OFF';
+            }
+            return 'FLASHLIGHT TOGGLED';
+          }
+
+          case 'SCREEN_RECORD': {
+            const isStop = (value || target).toLowerCase().includes('stop') || (value || target).toLowerCase().includes('બંધ');
+            if (isStop) {
+              if (screenRecorder && screenRecorder.state !== 'inactive') {
+                screenRecorder.stop();
+                return 'SCREEN RECORDING: SAVED';
+              }
+              return 'NO RECORDING ACTIVE';
+            } else {
+              if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                screenRecordChunks = [];
+                screenRecorder = new MediaRecorder(stream);
+                screenRecorder.ondataavailable = e => { if (e.data.size > 0) screenRecordChunks.push(e.data); };
+                screenRecorder.onstop = () => {
+                  const blob = new Blob(screenRecordChunks, { type: 'video/webm' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `MJ_ScreenRecording_${Date.now()}.webm`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  stream.getTracks().forEach(t => t.stop());
+                };
+                screenRecorder.start();
+                return 'SCREEN RECORDING: STARTED';
+              }
+              return 'SCREEN CAPTURE NOT SUPPORTED';
+            }
+          }
+
+          case 'WAKE_LOCK': {
+            const isOff = (value || target).toLowerCase().includes('off') || (value || target).toLowerCase().includes('બંધ');
+            if (isOff) {
+              if (wakeLockSentinel) {
+                await wakeLockSentinel.release();
+                wakeLockSentinel = null;
+                return 'KEEP AWAKE: OFF';
+              }
+              return 'WAKE LOCK INACTIVE';
+            } else {
+              if ('wakeLock' in navigator) {
+                wakeLockSentinel = await navigator.wakeLock.request('screen');
+                wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; });
+                return 'KEEP AWAKE: ACTIVE (ALWAYS ON)';
+              }
+              return 'WAKE LOCK NOT SUPPORTED';
+            }
+          }
+
+          case 'LOCATION': {
+            return new Promise((resolve) => {
+              if (!navigator.geolocation) return resolve('GPS NOT SUPPORTED');
+              navigator.geolocation.getCurrentPosition(
+                pos => {
+                  const lat = pos.coords.latitude.toFixed(5);
+                  const lon = pos.coords.longitude.toFixed(5);
+                  window.open(`https://www.google.com/maps?q=${lat},${lon}`, '_blank');
+                  resolve(`GPS: ${lat}, ${lon}`);
+                },
+                () => resolve('GPS PERMISSION NEEDED'),
+                { enableHighAccuracy: true, timeout: 8000 }
+              );
+            });
+          }
+
+          case 'VIBRATE': {
+            if (navigator.vibrate) {
+              navigator.vibrate([120, 80, 150]);
+              return 'HAPTIC VIBRATION';
+            }
+            return 'VIBRATION NOT SUPPORTED';
+          }
+
+          case 'CLIPBOARD': {
+            if ((target || value) === 'read') {
+              if (navigator.clipboard && navigator.clipboard.readText) {
+                const txt = await navigator.clipboard.readText();
+                return `CLIPBOARD: ${txt.substring(0, 30)}`;
+              }
+            } else if (value) {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(value);
+                return 'COPIED TO CLIPBOARD';
+              }
+            }
+            return 'CLIPBOARD ACCESSED';
+          }
+
+          case 'NOTIFICATION': {
+            if ('Notification' in window) {
+              if (Notification.permission === 'granted') {
+                new Notification('MJ AI Agent', { body: value || target || 'Background Service Running', icon: 'icon-192.png' });
+                return 'NOTIFICATION SENT';
+              } else if (Notification.permission !== 'denied') {
+                const perm = await Notification.requestPermission();
+                if (perm === 'granted') {
+                  new Notification('MJ AI Agent', { body: value || target || 'Background Service Running', icon: 'icon-192.png' });
+                  return 'NOTIFICATION SENT';
+                }
+              }
+            }
+            return 'NOTIFICATION PERMISSION NEEDED';
+          }
+        }
+      } catch (e) {
+        console.warn('Intent Execution Notice:', e);
+      }
+      return null;
+    }
+
+    // Individual Provider API Call Helpers
+    async function callGeminiAPI(key, systemPrompt, userText) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-4-Hydrogen:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt + "\nUser Command: " + userText }] }],
+          generationConfig: { responseMimeType: "application/json" }
+        })
+      });
+      if (!res.ok) throw new Error('Gemini HTTP ' + res.status);
+      const data = await res.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || null;
+    }
+
+    async function callGroqAPI(key, systemPrompt, userText) {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${key}`
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userText }
+          ]
+        })
+      });
+      if (!res.ok) throw new Error('Groq HTTP ' + res.status);
+      const data = await res.json();
+      return data?.choices?.[0]?.message?.content || null;
+    }
+
+    async function callOpenRouterAPI(key, systemPrompt, userText) {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${key}`,
+          "HTTP-Referer": "https://mj-ai-agent.app",
+          "X-Title": "MJ Liquid Glass AI Agent"
+        },
+        body: JSON.stringify({
+          model: "google/gemini-4-Hydrogen-001",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userText }
+          ]
+        })
+      });
+      if (!res.ok) throw new Error('OpenRouter HTTP ' + res.status);
+      const data = await res.json();
+      return data?.choices?.[0]?.message?.content || null;
+    }
+
+    /* =========================================================
+       MAX-STYLE AUTONOMOUS AGENTIC LOOP & STEP-BY-STEP EXECUTOR
+    ========================================================= */
+
+    // Advanced Task Decomposition Engine (Breaks any user prompt into 3-5 autonomous micro-steps)
+    async function runMJDeepAgent(userText) {
+      const geminiKey = document.getElementById('geminiKey').value.trim() || MJSafeStore.get('mj_gemini_key');
+      const groqKey = document.getElementById('groqKey').value.trim() || MJSafeStore.get('mj_groq_key');
+      const openrouterKey = document.getElementById('openrouterKey').value.trim() || MJSafeStore.get('mj_openrouter_key');
+      const userName = MJSafeStore.get('mj_user_name') || 'Boss';
+
+      const agentSystemPrompt = `You are MJ, an autonomous, highly capable Android AI Agent styled after Max AI. The user's name is "${userName}".
+Your job is not just to answer text, but to act as a real digital agent that executes tasks.
+When the user gives a complex command, break it down into sequential UI/system actions ("steps") and define the core "intent".
+Supported Intents:
+- NONE
+- OPEN_APP (launch any Android app, e.g. whatsapp, phonepe, settings)
+- CALL (phone dialer)
+- WHATSAPP (direct message via wa.me)
+- YOUTUBE_PLAY (search / stream on YouTube)
+- GOOGLE_SEARCH (Google web query)
+- ALARM (set alarm)
+- SETTINGS (system settings: accessibility, developer, overlay, notificationaccess, batterysaver, location, sound, display, wifi, bluetooth, etc.)
+- TORCH (flashlight on/off)
+- SCREEN_RECORD (start/stop screen recording)
+- WAKE_LOCK (keep screen awake / background stay-awake on/off)
+- LOCATION (live GPS location & map)
+- VIBRATE (haptic vibration feedback)
+- CLIPBOARD (copy text or read clipboard)
+- NOTIFICATION (push notification message)
+
+Always reply strictly in valid JSON with this exact structure:
+{
+  "reply": "Direct, confident, action-oriented response to ${userName} in their language",
+  "intent": "NONE | OPEN_APP | CALL | WHATSAPP | YOUTUBE_PLAY | GOOGLE_SEARCH | ALARM | SETTINGS | TORCH | SCREEN_RECORD | WAKE_LOCK | LOCATION | VIBRATE | CLIPBOARD | NOTIFICATION",
+  "target": "app name, phone number, setting name (e.g. accessibility, developer, overlay), or command target",
+  "pkg": "exact Android package name if launching an app (e.g. com.whatsapp, com.phonepe.app, org.telegram.messenger)",
+  "value": "search query, message text, state (on/off), or recording action",
+  "steps": [
+    {"action": "ANALYZE", "label": "Analyzing request parameters..."},
+    {"action": "PREPARE_INTENT", "label": "Mapping Android system bridge..."},
+    {"action": "EXECUTE", "label": "Executing target workflow..."}
+  ]
+}`;
+
+      const queue = [];
+      if (activeEngine === 'openrouter') {
+        if (openrouterKey) queue.push(() => callOpenRouterAPI(openrouterKey, agentSystemPrompt, userText));
+        if (geminiKey) queue.push(() => callGeminiAPI(geminiKey, agentSystemPrompt, userText));
+        if (groqKey) queue.push(() => callGroqAPI(groqKey, agentSystemPrompt, userText));
+      } else if (activeEngine === 'groq') {
+        if (groqKey) queue.push(() => callGroqAPI(groqKey, agentSystemPrompt, userText));
+        if (openrouterKey) queue.push(() => callOpenRouterAPI(openrouterKey, agentSystemPrompt, userText));
+        if (geminiKey) queue.push(() => callGeminiAPI(geminiKey, agentSystemPrompt, userText));
+      } else {
+        if (geminiKey) queue.push(() => callGeminiAPI(geminiKey, agentSystemPrompt, userText));
+        if (groqKey) queue.push(() => callGroqAPI(groqKey, agentSystemPrompt, userText));
+        if (openrouterKey) queue.push(() => callOpenRouterAPI(openrouterKey, agentSystemPrompt, userText));
+      }
+
+      let rawResponse = null;
+      for (const providerCall of queue) {
+        try {
+          rawResponse = await providerCall();
+          if (rawResponse) break;
+        } catch (err) {
+          console.warn("Agent engine fallback:", err);
+        }
+      }
+
+      if (!rawResponse) return null;
+
+      try {
+        const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
+        const cleaned = jsonMatch ? jsonMatch[0] : rawResponse;
+        const cmd = JSON.parse(cleaned);
+
+        // Max-style live execution steps on the HUD
+        const searchLabel = document.getElementById('searchingLabel');
+        const stepLogs = [];
+        if (Array.isArray(cmd.steps)) {
+          for (const stp of cmd.steps) {
+            if (searchLabel) searchLabel.innerText = stp.label || 'Processing...';
+            stepLogs.push(`✓ ${stp.label}`);
+            await new Promise(r => setTimeout(r, 350));
+          }
+        }
+
+        const badge = await triggerAndroidIntent(cmd);
+        const formattedReply = (cmd.reply || '').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+        const badgeHtml = badge ? `<br><span class="exec-badge">⚡ ${badge}</span>` : '';
+
+        return {
+          html: formattedReply + badgeHtml,
+          speech: cmd.reply || ''
+        };
+      } catch (e) {
+        const formatted = rawResponse.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+        return { html: formatted, speech: rawResponse };
+      }
+    }
+
+    async function processCommand(query) {
+      const low = query.toLowerCase().trim();
+      const userName = MJSafeStore.get('mj_user_name') || 'Boss';
+
+      // 1. Hardware Shortcut: Battery
+      if (low.includes('battery') || low.includes('બેટરી')) {
+        if ('getBattery' in navigator) {
+          try {
+            const bat = await navigator.getBattery();
+            const pct = Math.round(bat.level * 100);
+            const msg = `${userName}, તમારા ફોનની બેટરી હાલમાં <b>${pct}%</b> છે (${bat.charging ? 'Charging Active ⚡' : 'Normal Mode'}).`;
+            return { html: `${msg}<br><span class="exec-badge">⚡ BATTERY: ${pct}%</span>`, speech: msg };
+          } catch (e) {}
+        }
+      }
+
+      // 2. Hardware Shortcut: Flashlight
+      if (low.includes('flashlight') || low.includes('torch') || low.includes('લાઈટ')) {
+        const off = low.includes('off') || low.includes('બંધ');
+        const badge = await triggerAndroidIntent({ intent: 'TORCH', value: off ? 'off' : 'on' });
+        const msg = `ફોનની <b>Flashlight ${off ? 'OFF' : 'ON'}</b> કરી દીધી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 3. Deep Android: Screen Recording
+      if (low.includes('screen record') || low.includes('record screen') || low.includes('સ્ક્રીન રેકોર્ડ')) {
+        const isStop = low.includes('stop') || low.includes('બંધ') || low.includes('save');
+        const badge = await triggerAndroidIntent({ intent: 'SCREEN_RECORD', value: isStop ? 'stop' : 'start' });
+        const msg = isStop ? `સ્ક્રીન રેકોર્ડિંગ <b>સેવ</b> થઈ ગયું છે.` : `લાઈવ <b>સ્ક્રીન રેકોર્ડિંગ</b> શરૂ થઈ ગયું છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 4. Deep Android: Background Wake Lock (Screen Stay Awake)
+      if (low.includes('wake lock') || low.includes('screen awake') || low.includes('keep awake') || low.includes('સ્ક્રીન ચાલુ રાખ')) {
+        const isOff = low.includes('off') || low.includes('બંધ');
+        const badge = await triggerAndroidIntent({ intent: 'WAKE_LOCK', value: isOff ? 'off' : 'on' });
+        const msg = isOff ? `સ્ક્રીન હંમેશા ચાલુ રાખવાનો મોડ <b>બંધ</b> કર્યો છે.` : `બેકગ્રાઉન્ડ મોડ: સ્ક્રીન <b>હંમેશા ચાલુ</b> રહેશે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 5. Deep Android: Accessibility Settings
+      if (low.includes('accessibility') || low.includes('એક્સેસિબિલિટી') || low.includes('એક્સેસ')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'accessibility' });
+        const msg = `ફોનના <b>Accessibility Services</b> સેટિંગ્સ ઓપન કરી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 6. Deep Android: Developer Options
+      if (low.includes('developer') || low.includes('ડેવલપર') || low.includes('usb debug')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'developer' });
+        const msg = `ફોનના <b>Developer Options</b> ઓપન કરી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 7. Deep Android: Display Over Other Apps (Overlay)
+      if (low.includes('overlay') || low.includes('appear on top') || low.includes('ઓવરલે')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'overlay' });
+        const msg = `<b>Display Over Other Apps</b> ની પરમિશન સેટિંગ્સ ખોલી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 8. Deep Android: Battery Optimization Bypass
+      if (low.includes('battery optimization') || low.includes('ignore battery') || low.includes('બેકગ્રાઉન્ડ બેટરી') || low.includes('ઓપ્ટિમાઇઝેશન')) {
+        const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: 'batterysaver' });
+        const msg = `બેકગ્રાઉન્ડમાં કામ કરવા માટે <b>Battery Optimization</b> સેટિંગ્સ ખોલી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 9. Hardware: Live GPS Location
+      if (low.includes('location') || low.includes('gps') || low.includes('લોકેશન') || low.includes('ક્યાં છું')) {
+        const badge = await triggerAndroidIntent({ intent: 'LOCATION' });
+        const msg = `તમારી હાલની <b>GPS લોકેશન</b> ટ્રેસ કરી Google Maps પર ઓપન કરી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 10. Hardware: Haptic Vibration
+      if (low.includes('vibrat') || low.includes('ધ્રુજ') || low.includes('વાઇબ્રેટ')) {
+        const badge = await triggerAndroidIntent({ intent: 'VIBRATE' });
+        const msg = `ફોનમાં <b>હેપ્ટિક વાઇબ્રેશન</b> ટ્રિગર કર્યું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 11. Dynamic App Extraction & Launch
+      const dynamicApp = extractDynamicAppName(query);
+      if (dynamicApp) {
+        const aiResult = await runMJDeepAgent(query);
+        if (aiResult) return aiResult;
+
+        const badge = await triggerAndroidIntent({ intent: 'OPEN_APP', target: dynamicApp });
+        const msg = `જી ${userName}, <b>${dynamicApp}</b> ઓપન કરી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 4. Full Autonomous Max-Style Execution Loop
+      const aiAgentResult = await runMJDeepAgent(query);
+      if (aiAgentResult) return aiAgentResult;
+
+      // 5. Fallback
+      const fallback = `<b>${query}</b><br><br>નમસ્તે <b>${userName}</b>! તમારો કમાન્ડ પ્રોસેસ થઈ ગયો છે. એજન્ટિક ફીચર્સ ચાલુ કરવા માટે ઉપર <b>⚙️ Settings</b> માં તમારી API Key નાખી દો.`;
+      return { html: fallback, speech: `નમસ્તે ${userName}, તમારો કમાન્ડ પ્રોસેસ થઈ ગયો છે.` };
+    }
+
+    /* =========================================================
+       5. VOICE CHAT & SPEECH SYNTHESIS
+    ========================================================= */
+    function speakText(text) {
+      if (!('speechSynthesis' in window) || !text) return;
+      window.speechSynthesis.cancel();
+      const clean = text.replace(/<[^>]*>/g, '').replace(/[*_#`~]/g, '');
+      const utter = new SpeechSynthesisUtterance(clean);
+      utter.lang = MJSafeStore.get('mj_lang') || 'gu-IN';
+      utter.onstart = () => {
+        voicePulseAmp = 14;
+        document.getElementById('voiceBars').classList.add('speaking');
+      };
+      utter.onend = () => {
+        voicePulseAmp = 0;
+        document.getElementById('voiceBars').classList.remove('speaking');
+      };
+      utter.onerror = () => {
+        voicePulseAmp = 0;
+        document.getElementById('voiceBars').classList.remove('speaking');
+      };
+      window.speechSynthesis.speak(utter);
+    }
+
+    function startVoiceFromOrb() {
+      switchView('voice');
+      toggleVoiceSession();
+    }
+
+    function toggleVoiceSession() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        alert('Voice Mic માટે Chrome બ્રાઉઝર કે Android પરમિશન વાપરો.');
+        return;
+      }
+
+      if (activeRecognition) {
+        stopVoiceSession();
+        return;
+      }
+
+      const rec = new SpeechRec();
+      activeRecognition = rec;
+      rec.lang = MJSafeStore.get('mj_lang') || 'gu-IN';
+      rec.interimResults = false;
+
+      rec.onstart = () => {
+        voicePulseAmp = 18;
+        document.getElementById('redMicBtn').classList.add('active');
+        document.getElementById('voiceBars').classList.add('speaking');
+        document.getElementById('voiceStateLabel').innerText = 'Listening...';
+        voiceSeconds = 0;
+        clearInterval(voiceTimerInterval);
+        voiceTimerInterval = setInterval(() => {
+          voiceSeconds++;
+          const m = String(Math.floor(voiceSeconds / 60)).padStart(2, '0');
+          const s = String(voiceSeconds % 60).padStart(2, '0');
+          document.getElementById('voiceTimer').innerText = `${m}:${s}`;
+        }, 1000);
+      };
+
+      rec.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        stopVoiceSession();
+        switchView('orb');
+        document.getElementById('mainAskInput').value = transcript;
+        submitMainQuery();
+      };
+
+      rec.onerror = () => stopVoiceSession();
+      rec.onend = () => stopVoiceSession();
+
+      try {
+        rec.start();
+      } catch (e) {
+        stopVoiceSession();
+      }
+    }
+
+    function stopVoiceSession() {
+      if (activeRecognition) {
+        try { activeRecognition.abort(); } catch (e) {}
+        activeRecognition = null;
+      }
+      voicePulseAmp = 0;
+      clearInterval(voiceTimerInterval);
+      document.getElementById('redMicBtn').classList.remove('active');
+      document.getElementById('voiceBars').classList.remove('speaking');
+      document.getElementById('voiceStateLabel').innerText = 'Tap Mic to Speak...';
+    }
+
+    function openSettings() {
+      document.getElementById('settingsModal').classList.add('open');
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsModal').classList.remove('open');
+    }
+
+    function saveSettings() {
+      const uName = document.getElementById('userNameInp').value.trim() || 'Boss';
+      MJSafeStore.set('mj_user_name', uName);
+      MJSafeStore.set('mj_gemini_key', document.getElementById('geminiKey').value.trim());
+      MJSafeStore.set('mj_groq_key', document.getElementById('groqKey').value.trim());
+      MJSafeStore.set('mj_openrouter_key', document.getElementById('openrouterKey').value.trim());
+      MJSafeStore.set('mj_lang', document.getElementById('voiceLang').value);
+
+      document.getElementById('greetingSub').innerText = `Hello ${uName}`;
+      document.getElementById('hubTitle').innerText = `Hi, ${uName}!`;
+      closeSettings();
+      speakText(`નમસ્તે ${uName}, MJ નું AI Brain એક્ટિવેટ થઈ ગયું છે.`);
+    }
+  </script>
+</body>
+</html>
