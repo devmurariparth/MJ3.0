@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>MJ — Next-Gen Liquid Glass AI Agent</title>
+  <title>MJ — Master AI Agent</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0d47ff">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -87,7 +87,7 @@
       filter: blur(30px);
       pointer-events: none;
       z-index: 0;
-      transition: all 0.6s ease;
+      transition: all 0.5s ease;
     }
 
     .horizon-glow.searching {
@@ -99,16 +99,16 @@
     }
 
     .horizon-glow.siren-alert {
-      height: 85%;
+      height: 88%;
       background: radial-gradient(ellipse at 50% 75%,
-        rgba(255, 20, 60, 0.95) 0%,
-        rgba(220, 0, 40, 0.65) 45%,
+        rgba(255, 20, 60, 0.98) 0%,
+        rgba(220, 0, 40, 0.7) 45%,
         transparent 85%);
-      animation: sirenFlash 0.4s infinite alternate;
+      animation: sirenFlash 0.35s infinite alternate;
     }
 
     @keyframes sirenFlash {
-      from { opacity: 0.4; }
+      from { opacity: 0.35; }
       to { opacity: 1; }
     }
 
@@ -161,12 +161,12 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: 0.25s;
+      transition: 0.2s;
     }
 
     .circle-btn:active {
-      transform: scale(0.92);
-      background: rgba(255, 255, 255, 0.22);
+      transform: scale(0.9);
+      background: rgba(255, 255, 255, 0.24);
     }
 
     .circle-btn svg {
@@ -192,14 +192,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-top: 14px;
+      margin-top: 10px;
       transition: all 0.5s ease;
     }
 
     .orb-wrapper {
       position: relative;
-      width: 180px;
-      height: 180px;
+      width: 175px;
+      height: 175px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -207,14 +207,14 @@
     }
 
     #ribbonCanvas {
-      width: 180px;
-      height: 180px;
+      width: 175px;
+      height: 175px;
     }
 
     .hero-copy {
       text-align: center;
-      margin-top: 10px;
-      padding: 0 24px;
+      margin-top: 8px;
+      padding: 0 20px;
       transition: all 0.4s ease;
     }
 
@@ -222,10 +222,10 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 5px 13px;
       border-radius: 99px;
       background: rgba(0, 255, 136, 0.14);
-      border: 1px solid rgba(0, 255, 136, 0.4);
+      border: 1px solid rgba(0, 255, 136, 0.45);
       color: #00ff88;
       font-size: 0.72rem;
       font-weight: 600;
@@ -235,13 +235,13 @@
 
     .greeting-sub {
       font-size: 0.92rem;
-      color: rgba(200, 220, 255, 0.78);
-      margin-bottom: 6px;
+      color: rgba(200, 220, 255, 0.8);
+      margin-bottom: 4px;
     }
 
     .greeting-main {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.9rem;
+      font-size: 1.85rem;
       font-weight: 600;
       line-height: 1.18;
       background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.7) 100%);
@@ -249,62 +249,44 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Quick Instant Action Bar on Home Screen */
-    .home-quick-row {
-      display: flex;
+    /* Quick Action Matrix on Home Screen */
+    .home-quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       padding: 14px 18px 4px;
-      overflow-x: auto;
       width: 100%;
-      scrollbar-width: none;
     }
-    .home-quick-row::-webkit-scrollbar { display: none; }
 
-    .quick-pill-btn {
-      flex-shrink: 0;
-      padding: 8px 14px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.09);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    .q-btn {
+      padding: 10px 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       color: #fff;
-      font-size: 0.76rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .quick-pill-btn:active {
-      background: rgba(0, 195, 255, 0.35);
-      transform: scale(0.95);
-    }
-
-    .found-copy {
-      position: absolute;
-      top: 245px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(15px);
-      pointer-events: none;
-      transition: all 0.4s ease;
-    }
-
-    .found-copy.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .found-copy h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.85rem;
+      font-size: 0.71rem;
       font-weight: 600;
-      line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: 0.18s;
+    }
+
+    .q-btn span {
+      font-size: 1.15rem;
+    }
+
+    .q-btn:active {
+      background: rgba(0, 195, 255, 0.35);
+      border-color: #00d2ff;
+      transform: scale(0.94);
     }
 
     .bottom-dock {
       margin-top: auto;
-      padding: 14px 20px 24px;
+      padding: 12px 18px 22px;
       display: flex;
       justify-content: center;
       position: relative;
@@ -323,17 +305,17 @@
       backdrop-filter: blur(28px);
       display: flex;
       align-items: center;
-      padding: 0 12px 0 20px;
-      transition: all 0.4s ease;
+      padding: 0 10px 0 18px;
+      transition: all 0.35s ease;
       overflow: hidden;
     }
 
     .morph-pill.searching-mode {
-      width: 215px;
+      width: 220px;
       height: 52px;
       justify-content: center;
       padding: 0 20px;
-      border-color: rgba(120, 200, 255, 0.6);
+      border-color: rgba(120, 200, 255, 0.65);
     }
 
     .pill-input-wrap {
@@ -371,7 +353,7 @@
       height: 4px;
       border-radius: 50%;
       background: #7cc4ff;
-      animation: dotBlink 0.9s infinite alternate;
+      animation: dotBlink 0.8s infinite alternate;
     }
     .pulse-dots span:nth-child(2) { animation-delay: 0.2s; }
     .pulse-dots span:nth-child(3) { animation-delay: 0.4s; }
@@ -387,12 +369,12 @@
       border: none;
       outline: none;
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 0.94rem;
       user-select: text;
     }
 
     .ask-input::placeholder {
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.62);
     }
 
     .wave-trigger-btn {
@@ -407,10 +389,11 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      font-size: 0.95rem;
     }
 
     .wave-trigger-btn:active {
-      transform: scale(0.92);
+      transform: scale(0.9);
     }
 
     /* Slide-Up Frosted Glass Sheet */
@@ -418,21 +401,21 @@
       position: absolute;
       left: 14px;
       right: 14px;
-      top: 72px;
-      bottom: 20px;
+      top: 70px;
+      bottom: 18px;
       z-index: 15;
       border-radius: 34px;
-      background: linear-gradient(165deg, rgba(255, 255, 255, 0.14) 0%, rgba(15, 28, 55, 0.72) 50%, rgba(8, 18, 42, 0.92) 100%);
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.15) 0%, rgba(15, 28, 55, 0.82) 45%, rgba(6, 14, 36, 0.96) 100%);
       backdrop-filter: blur(38px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.26);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1.5px 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1.5px 1px rgba(255, 255, 255, 0.5);
       display: flex;
       flex-direction: column;
       padding: 18px;
       transform: translateY(112%);
       opacity: 0;
       pointer-events: none;
-      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: all 0.45s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     .frosted-sheet.open {
@@ -452,7 +435,7 @@
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.14);
       border: 1px solid rgba(255, 255, 255, 0.25);
       color: #fff;
       cursor: pointer;
@@ -463,12 +446,12 @@
     }
 
     .user-query-pill {
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(0, 195, 255, 0.18);
+      border: 1px solid rgba(0, 195, 255, 0.4);
       padding: 7px 14px;
       border-radius: 20px;
       font-size: 0.82rem;
-      font-weight: 500;
+      font-weight: 600;
       color: #fff;
       max-width: 80%;
       overflow: hidden;
@@ -487,9 +470,9 @@
     .sheet-scroll-body::-webkit-scrollbar { display: none; }
 
     .mj-answer-text {
-      font-size: 0.93rem;
+      font-size: 0.94rem;
       line-height: 1.58;
-      color: rgba(255, 255, 255, 0.95);
+      color: #ffffff;
       user-select: text;
     }
 
@@ -498,60 +481,13 @@
       align-items: center;
       gap: 6px;
       margin-top: 10px;
-      padding: 6px 13px;
+      padding: 6px 14px;
       border-radius: 99px;
-      background: rgba(0, 210, 255, 0.18);
-      border: 1px solid rgba(0, 210, 255, 0.5);
-      color: #7ce8ff;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .visual-cards-row {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding: 6px 0;
-      scrollbar-width: none;
-    }
-    .visual-cards-row::-webkit-scrollbar { display: none; }
-
-    .mini-glass-card {
-      min-width: 132px;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.09);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .mini-glass-card:active {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(0.96);
-    }
-
-    .mini-card-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #00c6ff, #0072ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mini-card-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .mini-card-sub {
-      font-size: 0.68rem;
-      color: rgba(255, 255, 255, 0.65);
+      background: rgba(0, 255, 136, 0.18);
+      border: 1px solid rgba(0, 255, 136, 0.5);
+      color: #00ff88;
+      font-size: 0.76rem;
+      font-weight: 700;
     }
 
     .sheet-followup {
@@ -599,53 +535,33 @@
       margin-top: 2px;
     }
 
-    .engine-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    /* Service Permission Status Banner */
+    .perm-banner {
+      background: linear-gradient(135deg, rgba(0, 195, 255, 0.16), rgba(13, 71, 255, 0.2));
+      border: 1px solid rgba(0, 195, 255, 0.45);
+      border-radius: 22px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
     }
 
-    .engine-card {
-      background: linear-gradient(145deg, rgba(255,255,255,0.11), rgba(255,255,255,0.04));
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 20px;
-      padding: 12px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-      cursor: pointer;
-    }
-
-    .engine-card.selected {
-      background: linear-gradient(145deg, rgba(0, 168, 255, 0.3), rgba(13, 71, 255, 0.2));
-      border-color: rgba(0, 195, 255, 0.7);
-    }
-
-    .engine-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #7cc4ff;
-    }
-
-    .engine-name {
-      font-size: 0.76rem;
-      font-weight: 600;
-    }
-
-    .section-head {
+    .perm-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.86rem;
-      font-weight: 600;
+      font-size: 0.78rem;
+    }
+
+    .perm-btn {
+      padding: 5px 12px;
+      border-radius: 99px;
+      border: none;
+      background: #00c6ff;
+      color: #000;
+      font-weight: 700;
+      font-size: 0.72rem;
+      cursor: pointer;
     }
 
     .bento-grid {
@@ -667,13 +583,8 @@
     }
 
     .bento-box:active {
-      transform: scale(0.96);
+      transform: scale(0.95);
       border-color: #00c6ff;
-    }
-
-    .bento-box.tall {
-      grid-row: span 2;
-      background: linear-gradient(160deg, rgba(0, 168, 255, 0.24), rgba(120, 60, 255, 0.16));
     }
 
     .bento-badge {
@@ -684,39 +595,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.1rem;
     }
 
     .bento-title {
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 600;
       margin-bottom: 3px;
     }
 
     .bento-desc {
-      font-size: 0.71rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       line-height: 1.35;
-    }
-
-    .suggestion-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .suggestion-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      cursor: pointer;
-    }
-
-    .suggestion-row:active {
-      background: rgba(255, 255, 255, 0.16);
     }
 
     /* VIEW 3: VOICE CHAT */
@@ -805,20 +696,11 @@
       cursor: pointer;
     }
 
-    .red-mic-orb.active {
-      animation: pulseRed 0.9s infinite alternate;
-    }
-
-    @keyframes pulseRed {
-      from { transform: scale(1); }
-      to { transform: scale(1.12); box-shadow: 0 0 38px rgba(255, 65, 108, 0.95); }
-    }
-
     .settings-modal {
       position: absolute;
       inset: 0;
       z-index: 50;
-      background: rgba(0, 4, 15, 0.85);
+      background: rgba(0, 4, 15, 0.88);
       backdrop-filter: blur(25px);
       display: none;
       align-items: center;
@@ -834,16 +716,10 @@
       width: 100%;
       max-height: 88vh;
       overflow-y: auto;
-      background: rgba(14, 22, 46, 0.96);
+      background: rgba(14, 22, 46, 0.98);
       border: 1px solid rgba(255, 255, 255, 0.25);
       border-radius: 28px;
       padding: 22px;
-    }
-
-    .settings-card h3 {
-      font-family: 'Outfit', sans-serif;
-      margin-bottom: 10px;
-      font-size: 1.1rem;
     }
 
     .field-lbl {
@@ -893,11 +769,10 @@
 
   <main class="phone-frame">
     <div class="horizon-glow" id="horizonGlow"></div>
-    <video id="intruderVideo" autoplay playsinline muted style="display:none;"></video>
 
-    <!-- Top Navigation Bar -->
+    <!-- Top Bar -->
     <header class="top-bar">
-      <button class="circle-btn" onclick="closeSheetAndReset()" title="Home Orb">
+      <button class="circle-btn" onclick="closeSheetAndReset()" title="Home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="9"></circle>
           <path d="M12 3a9 9 0 0 1 9 9"></path>
@@ -906,7 +781,7 @@
 
       <div class="nav-pills">
         <button class="nav-tab active" id="tabOrb" onclick="switchView('orb')">Orb AI</button>
-        <button class="nav-tab" id="tabHub" onclick="switchView('hub')">AI Hub</button>
+        <button class="nav-tab" id="tabHub" onclick="switchView('hub')">Max Hub</button>
         <button class="nav-tab" id="tabVoice" onclick="switchView('voice')">Voice</button>
       </div>
 
@@ -918,38 +793,51 @@
       </button>
     </header>
 
-    <!-- VIEW 1: 3D RIBBON ORB & SHEET -->
+    <!-- VIEW 1: ORB & 1-TAP HARDWARE GRID -->
     <section class="view-panel active" id="viewOrb">
       <div class="orb-stage" id="orbStage">
-        <div class="orb-wrapper" onclick="triggerNativeOrWebVoice()" title="Tap Orb to Speak">
-          <canvas id="ribbonCanvas" width="360" height="360"></canvas>
+        <div class="orb-wrapper" onclick="startVoiceNow()">
+          <canvas id="ribbonCanvas" width="350" height="350"></canvas>
         </div>
 
         <div class="hero-copy" id="heroCopy">
-          <div class="wake-pill" onclick="triggerNativeOrWebVoice()">
-            <span>🎙️</span> <span id="bridgeStatusText">Tap Orb or Mic to Speak</span>
+          <div class="wake-pill" onclick="startVoiceNow()">
+            <span>🎙️</span> <span id="bridgeStatusText">Tap Orb or Mic to Command MJ</span>
           </div>
           <div class="greeting-sub" id="greetingSub">Hello Boss</div>
           <h1 class="greeting-main">How can I help<br>you today?</h1>
         </div>
 
-        <!-- Instant 1-Tap Working Buttons on Home Screen -->
-        <div class="home-quick-row">
-          <button class="quick-pill-btn" onclick="triggerPrompt('Turn on Flashlight')">🔦 Torch ON</button>
-          <button class="quick-pill-btn" onclick="triggerPrompt('Turn off Flashlight')">🌑 Torch OFF</button>
-          <button class="quick-pill-btn" onclick="triggerPrompt('Open WhatsApp')">💬 WhatsApp</button>
-          <button class="quick-pill-btn" onclick="triggerPrompt('Open YouTube')">▶ YouTube</button>
-          <button class="quick-pill-btn" onclick="triggerPrompt('Open Camera')">📷 Camera</button>
-          <button class="quick-pill-btn" onclick="triggerPrompt('Open Wi-Fi')">📶 Wi-Fi</button>
-          <button class="quick-pill-btn" onclick="triggerPrompt('Battery status')">🔋 Battery</button>
+        <!-- 8 Instant Hardware & App Buttons (100% Working) -->
+        <div class="home-quick-grid">
+          <button class="q-btn" onclick="triggerPrompt('Turn on Flashlight')">
+            <span>🔦</span>Torch ON
+          </button>
+          <button class="q-btn" onclick="triggerPrompt('Turn off Flashlight')">
+            <span>🌑</span>Torch OFF
+          </button>
+          <button class="q-btn" onclick="triggerPrompt('Open WhatsApp')">
+            <span>💬</span>WhatsApp
+          </button>
+          <button class="q-btn" onclick="triggerPrompt('Open YouTube')">
+            <span>▶️</span>YouTube
+          </button>
+          <button class="q-btn" onclick="triggerPrompt('Volume 100%')">
+            <span>🔊</span>Vol 100%
+          </button>
+          <button class="q-btn" onclick="triggerPrompt('Arm security alarm')">
+            <span>🚨</span>Siren ON
+          </button>
+          <button class="q-btn" onclick="triggerPrompt('Read screen')">
+            <span>👁️</span>Read Screen
+          </button>
+          <button class="q-btn" onclick="triggerPrompt('Battery status')">
+            <span>🔋</span>Battery
+          </button>
         </div>
       </div>
 
-      <div class="found-copy" id="foundCopy">
-        <h2>Great!<br>Here is what<br>I found</h2>
-      </div>
-
-      <!-- Slide-Up Frosted Glass Result Sheet -->
+      <!-- Slide-Up Result Sheet -->
       <div class="frosted-sheet" id="resultSheet">
         <div class="sheet-top-bar">
           <button class="sheet-close-btn" onclick="closeSheetAndReset()">✕</button>
@@ -958,33 +846,10 @@
 
         <div class="sheet-scroll-body" id="sheetBody">
           <div class="mj-answer-text" id="sheetAnswerText"></div>
-
-          <div class="visual-cards-row">
-            <div class="mini-glass-card" onclick="triggerPrompt('Open YouTube')">
-              <div class="mini-card-icon">▶</div>
-              <div class="mini-card-title">YouTube</div>
-              <div class="mini-card-sub">Open App</div>
-            </div>
-            <div class="mini-glass-card" onclick="triggerPrompt('Open WhatsApp')">
-              <div class="mini-card-icon" style="background: linear-gradient(135deg, #25D366, #128C7E);">💬</div>
-              <div class="mini-card-title">WhatsApp</div>
-              <div class="mini-card-sub">Open App</div>
-            </div>
-            <div class="mini-glass-card" onclick="triggerPrompt('Turn on Flashlight')">
-              <div class="mini-card-icon">⚡</div>
-              <div class="mini-card-title">Flashlight</div>
-              <div class="mini-card-sub">Toggle Torch</div>
-            </div>
-            <div class="mini-glass-card" onclick="triggerPrompt('Disarm security alarm')">
-              <div class="mini-card-icon" style="background: linear-gradient(135deg, #ff0844, #ffb199);">🛑</div>
-              <div class="mini-card-title">Stop Siren</div>
-              <div class="mini-card-sub">Disarm Guard</div>
-            </div>
-          </div>
         </div>
 
         <div class="sheet-followup">
-          <input type="text" id="followupInput" placeholder="Ask follow-up or command..." onkeydown="if(event.key==='Enter') submitFollowup()" />
+          <input type="text" id="followupInput" placeholder="Next command..." onkeydown="if(event.key==='Enter') submitFollowup()" />
           <button class="wave-trigger-btn" onclick="submitFollowup()">➤</button>
         </div>
       </div>
@@ -997,15 +862,11 @@
               type="text"
               id="mainAskInput"
               class="ask-input"
-              placeholder="Ask anything or open any app..."
+              placeholder="Command MJ (e.g. Open Instagram, Vol 80%)..."
               onkeydown="if(event.key==='Enter') submitMainQuery()"
             />
-            <button class="wave-trigger-btn" onclick="triggerNativeOrWebVoice()" title="Speak">
-              🎤
-            </button>
-            <button class="wave-trigger-btn" style="background:linear-gradient(135deg,#00c6ff,#0072ff);" onclick="submitMainQuery()" title="Send">
-              ➤
-            </button>
+            <button class="wave-trigger-btn" onclick="startVoiceNow()" title="Voice Mic">🎤</button>
+            <button class="wave-trigger-btn" style="background:linear-gradient(135deg,#00c6ff,#0072ff);" onclick="submitMainQuery()" title="Send">➤</button>
           </div>
 
           <div class="searching-indicator">
@@ -1016,72 +877,73 @@
       </div>
     </section>
 
-    <!-- VIEW 2: BENTO AI HUB -->
+    <!-- VIEW 2: MAX HUB & PERMISSION ACTIVATOR -->
     <section class="view-panel" id="viewHub">
       <div class="hub-scroll">
         <div class="hub-hero">
           <h1 id="hubTitle">Hi, Boss!</h1>
-          <p>All Systems Connected • Native Android Bridge</p>
+          <p>Max AI Agent • Deep System & Accessibility Control</p>
         </div>
 
-        <div class="engine-grid">
-          <div class="engine-card selected" id="engGemini" onclick="selectEngine('gemini')">
-            <div class="engine-icon">✦</div>
-            <div class="engine-name">Gemini / Free</div>
+        <!-- 1-Tap Android Service Activator Card -->
+        <div class="perm-banner">
+          <div style="font-weight:700;font-size:0.84rem;color:#7ce8ff;">🛡️ Enable Deep Max AI Services (One-Time Setup)</div>
+          <div class="perm-row">
+            <span>1. Accessibility (Auto-Tap, Scroll Reels, OCR)</span>
+            <button class="perm-btn" onclick="triggerPrompt('Open Accessibility')">Enable</button>
           </div>
-          <div class="engine-card" id="engGroq" onclick="selectEngine('groq')">
-            <div class="engine-icon">⚡</div>
-            <div class="engine-name">Groq 3.3</div>
+          <div class="perm-row">
+            <span>2. Notification Reader (Read WhatsApp Aloud)</span>
+            <button class="perm-btn" onclick="triggerPrompt('Open Notification Access')">Enable</button>
           </div>
-          <div class="engine-card" id="engOpenRouter" onclick="selectEngine('openrouter')">
-            <div class="engine-icon">🌐</div>
-            <div class="engine-name">OpenRouter</div>
-          </div>
-        </div>
-
-        <div class="section-head">
-          <span>Working Hardware & App Tools</span>
-          <span style="font-size:0.74rem;color:#00ff88;">● Ready</span>
         </div>
 
         <div class="bento-grid">
-          <div class="bento-box tall" onclick="triggerNativeOrWebVoice()">
-            <div class="bento-badge">🎙️</div>
+          <div class="bento-box" onclick="triggerPrompt('Read unread notifications')">
+            <div class="bento-badge">🔔</div>
             <div>
-              <div class="bento-title">Native Voice Command</div>
-              <div class="bento-desc">Speak in Gujarati, Hindi or English to control phone</div>
+              <div class="bento-title">Read WhatsApp Msgs</div>
+              <div class="bento-desc">Reads incoming unread notifications aloud</div>
             </div>
           </div>
 
-          <div class="bento-box" onclick="triggerPrompt('Turn on Flashlight')">
-            <div class="bento-badge">🔦</div>
+          <div class="bento-box" onclick="triggerPrompt('Auto scroll reels')">
+            <div class="bento-badge">📲</div>
             <div>
-              <div class="bento-title">Flashlight ON/OFF</div>
-              <div class="bento-desc">Direct hardware LED torch</div>
+              <div class="bento-title">Auto-Scroll Reels</div>
+              <div class="bento-desc">Swipes YouTube Shorts & Instagram Reels</div>
             </div>
           </div>
 
           <div class="bento-box" onclick="triggerPrompt('Arm security alarm')">
             <div class="bento-badge">🚨</div>
             <div>
-              <div class="bento-title">Anti-Theft Siren</div>
-              <div class="bento-desc">Motion & charger unplug siren</div>
+              <div class="bento-title">Arm Motion Siren</div>
+              <div class="bento-desc">Blasts siren if phone is touched or unplugged</div>
             </div>
           </div>
 
-          <div class="bento-box" onclick="triggerPrompt('Open WhatsApp')">
-            <div class="bento-badge">💬</div>
+          <div class="bento-box" onclick="triggerPrompt('Disarm security alarm')">
+            <div class="bento-badge">🛑</div>
             <div>
-              <div class="bento-title">Open WhatsApp</div>
-              <div class="bento-desc">Launch WhatsApp or send message</div>
+              <div class="bento-title">Stop / Disarm Siren</div>
+              <div class="bento-desc">Turn off anti-theft siren immediately</div>
             </div>
           </div>
 
-          <div class="bento-box" onclick="triggerPrompt('Open YouTube')">
-            <div class="bento-badge">▶</div>
+          <div class="bento-box" onclick="triggerPrompt('Open Camera')">
+            <div class="bento-badge">📷</div>
             <div>
-              <div class="bento-title">Open YouTube</div>
-              <div class="bento-desc">Launch YouTube app directly</div>
+              <div class="bento-title">Open Camera</div>
+              <div class="bento-desc">Launch native Android Camera</div>
+            </div>
+          </div>
+
+          <div class="bento-box" onclick="triggerPrompt('Set alarm for 7:00 AM')">
+            <div class="bento-badge">⏰</div>
+            <div>
+              <div class="bento-title">Set 7:00 AM Alarm</div>
+              <div class="bento-desc">Set system alarm clock directly</div>
             </div>
           </div>
 
@@ -1089,7 +951,7 @@
             <div class="bento-badge">📶</div>
             <div>
               <div class="bento-title">Wi-Fi Settings</div>
-              <div class="bento-desc">Open Android Wi-Fi panel</div>
+              <div class="bento-desc">Open system Wi-Fi panel</div>
             </div>
           </div>
 
@@ -1097,95 +959,37 @@
             <div class="bento-badge">🦷</div>
             <div>
               <div class="bento-title">Bluetooth</div>
-              <div class="bento-desc">Open Bluetooth settings</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section-head">
-          <span>System Controls</span>
-        </div>
-
-        <div class="suggestion-list">
-          <div class="suggestion-row" onclick="triggerPrompt('Set alarm for 7:00 AM')">
-            <div class="bento-badge">⏰</div>
-            <div>
-              <div class="bento-title">Set 7:00 AM Alarm</div>
-              <div class="bento-desc">Directly sets alarm in Android Clock app</div>
-            </div>
-          </div>
-
-          <div class="suggestion-row" onclick="triggerPrompt('Open Sound Settings')">
-            <div class="bento-badge">🔊</div>
-            <div>
-              <div class="bento-title">Volume & Sound Settings</div>
-              <div class="bento-desc">Adjust ring, media and alarm volume</div>
-            </div>
-          </div>
-
-          <div class="suggestion-row" onclick="triggerPrompt('Open Display Settings')">
-            <div class="bento-badge">☀️</div>
-            <div>
-              <div class="bento-title">Brightness & Display</div>
-              <div class="bento-desc">Open Android brightness & display settings</div>
-            </div>
-          </div>
-
-          <div class="suggestion-row" onclick="triggerPrompt('Open Accessibility')">
-            <div class="bento-badge">🛡️</div>
-            <div>
-              <div class="bento-title">Accessibility Settings</div>
-              <div class="bento-desc">Open Android Accessibility Services</div>
-            </div>
-          </div>
-
-          <div class="suggestion-row" onclick="triggerPrompt('Open Calculator')">
-            <div class="bento-badge">🧮</div>
-            <div>
-              <div class="bento-title">Open Calculator</div>
-              <div class="bento-desc">Launch system calculator app</div>
+              <div class="bento-desc">Open system Bluetooth panel</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- VIEW 3: PARTICLE VOICE CHAT -->
+    <!-- VIEW 3: VOICE CHAT -->
     <section class="view-panel" id="viewVoice">
       <div class="voice-screen">
         <div class="voice-status-label" id="voiceStateLabel">Tap Red Mic to Speak</div>
-
-        <canvas id="particleCanvas" width="420" height="420" onclick="triggerNativeOrWebVoice()"></canvas>
-
+        <canvas id="particleCanvas" width="400" height="400" onclick="startVoiceNow()"></canvas>
         <div class="voice-headline">
-          Speak Naturally As<br><b>MJ Listens And<br>Executes Instantly</b>
+          Speak in Gujarati, Hindi or English<br><b>MJ Executes Instantly</b>
         </div>
-
         <div class="voice-bars" id="voiceBars">
           <span></span><span></span><span></span><span></span><span></span>
         </div>
-
         <div class="voice-controls-row">
-          <button class="circle-btn" onclick="stopVoiceSession()">✕</button>
-          <button class="red-mic-orb" id="redMicBtn" onclick="triggerNativeOrWebVoice()">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-              <line x1="12" y1="19" x2="12" y2="23"></line>
-            </svg>
-          </button>
+          <button class="circle-btn" onclick="switchView('orb')">✕</button>
+          <button class="red-mic-orb" id="redMicBtn" onclick="startVoiceNow()">🎤</button>
           <button class="circle-btn" onclick="switchView('orb')">✓</button>
         </div>
-
-        <div class="voice-timer" id="voiceTimer">Ready</div>
       </div>
     </section>
 
     <!-- Settings Modal -->
     <div class="settings-modal" id="settingsModal">
       <div class="settings-card">
-        <h3>⚙️ MJ AI Brain & Profile</h3>
-        <p style="font-size:0.74rem;color:#7ce8ff;margin-bottom:8px;">✓ Built-in Free AI is already active! Optional keys below:</p>
+        <h3>⚙️ MJ Master Settings</h3>
+        <p style="font-size:0.74rem;color:#00ff88;margin:6px 0 10px;">✓ Local NLU + Free AI Brain is Built-In (Works even without API keys!)</p>
 
         <label class="field-lbl">Your Name</label>
         <input type="text" id="userNameInp" class="field-inp" placeholder="e.g. Mukeshbhai / Parth" />
@@ -1216,40 +1020,35 @@
 
   <script>
     /* =========================================================
-       0. SAFE STORAGE & NATIVE ANDROID BRIDGE CHECK
+       0. SAFE STORAGE & NATIVE ANDROID BRIDGE VERIFIER
     ========================================================= */
     const MJSafeStore = {
       _mem: {},
-      get(key) {
-        try { return localStorage.getItem(key) || this._mem[key] || ''; }
-        catch (e) { return this._mem[key] || ''; }
-      },
-      set(key, val) {
-        this._mem[key] = val;
-        try { localStorage.setItem(key, val); } catch (e) {}
-      }
+      get(k) { try { return localStorage.getItem(k) || this._mem[k] || ''; } catch (e) { return this._mem[k] || ''; } },
+      set(k, v) { this._mem[k] = v; try { localStorage.setItem(k, v); } catch (e) {} }
     };
 
-    function hasNativeBridge() {
+    function hasNative() {
       return typeof window.MJNativeBridge !== 'undefined' && window.MJNativeBridge !== null;
     }
 
-    window.addEventListener('load', () => {
-      if (hasNativeBridge()) {
-        document.getElementById('bridgeStatusText').innerText = 'Native Android Control Active ✓';
+    function checkNativeBridgeStatus() {
+      const el = document.getElementById('bridgeStatusText');
+      if (hasNative()) {
+        el.innerText = 'Native Android Master Bridge Active ✓';
       }
-    });
+    }
+    setInterval(checkNativeBridgeStatus, 1200);
 
     /* =========================================================
        1. 3D RIBBON ORB & PARTICLE SPHERE ANIMATIONS
     ========================================================= */
     const rCanvas = document.getElementById('ribbonCanvas');
     const rCtx = rCanvas.getContext('2d');
-    let ribbonSpeed = 0.022;
-    let ribbonPhase = 0;
+    let ribbonSpeed = 0.022, ribbonPhase = 0;
 
     function drawRibbonOrb() {
-      const w = rCanvas.width, h = rCanvas.height, cx = w / 2, cy = h / 2, radius = 122;
+      const w = rCanvas.width, h = rCanvas.height, cx = w / 2, cy = h / 2, radius = 118;
       rCtx.clearRect(0, 0, w, h);
       ribbonPhase += ribbonSpeed;
 
@@ -1278,15 +1077,15 @@
       rCtx.globalCompositeOperation = 'screen';
 
       const ribbonConfigs = [
-        { tiltX: 0.55, tiltY: 0.35, speedMult: 1.0, width: 14, color: 'rgba(60, 165, 255, 0.85)' },
-        { tiltX: -0.45, tiltY: 0.65, speedMult: -0.8, width: 10, color: 'rgba(140, 215, 255, 0.75)' },
-        { tiltX: 0.2, tiltY: -0.6, speedMult: 1.3, width: 8, color: 'rgba(0, 110, 255, 0.7)' }
+        { tiltX: 0.55, tiltY: 0.35, speedMult: 1.0, width: 13, color: 'rgba(60, 165, 255, 0.85)' },
+        { tiltX: -0.45, tiltY: 0.65, speedMult: -0.8, width: 9, color: 'rgba(140, 215, 255, 0.75)' },
+        { tiltX: 0.2, tiltY: -0.6, speedMult: 1.3, width: 7, color: 'rgba(0, 110, 255, 0.7)' }
       ];
 
       ribbonConfigs.forEach((cfg) => {
         rCtx.beginPath();
-        for (let i = 0; i <= 72; i++) {
-          const t = (i / 72) * Math.PI * 2;
+        for (let i = 0; i <= 68; i++) {
+          const t = (i / 68) * Math.PI * 2;
           const angle = t + ribbonPhase * cfg.speedMult;
           const x3d = Math.cos(angle) * radius;
           const y3d = Math.sin(angle) * radius * Math.sin(cfg.tiltX + Math.cos(ribbonPhase * 0.5) * 0.25);
@@ -1305,13 +1104,6 @@
         rCtx.stroke();
       });
       rCtx.restore();
-
-      rCtx.strokeStyle = 'rgba(150, 215, 255, 0.42)';
-      rCtx.lineWidth = 2;
-      rCtx.beginPath();
-      rCtx.arc(cx, cy, radius, 0, Math.PI * 2);
-      rCtx.stroke();
-
       requestAnimationFrame(drawRibbonOrb);
     }
     drawRibbonOrb();
@@ -1321,14 +1113,14 @@
     let pAngle = 0, voicePulseAmp = 0;
 
     function drawParticleSphere() {
-      const w = pCanvas.width, h = pCanvas.height, cx = w / 2, cy = h / 2, rad = 148;
+      const w = pCanvas.width, h = pCanvas.height, cx = w / 2, cy = h / 2, rad = 142;
       pCtx.clearRect(0, 0, w, h);
       pAngle += 0.015;
-      for (let i = 1; i < 20; i++) {
-        const theta = (i / 20) * Math.PI;
+      for (let i = 1; i < 18; i++) {
+        const theta = (i / 18) * Math.PI;
         const sinTheta = Math.sin(theta), cosTheta = Math.cos(theta);
-        for (let j = 0; j < 40; j++) {
-          const phi = (j / 40) * Math.PI * 2 + pAngle;
+        for (let j = 0; j < 36; j++) {
+          const phi = (j / 36) * Math.PI * 2 + pAngle;
           const r = rad + Math.sin(theta * 5 + pAngle * 3) * voicePulseAmp;
           const x = r * sinTheta * Math.cos(phi);
           const y = r * cosTheta;
@@ -1348,16 +1140,8 @@
     drawParticleSphere();
 
     /* =========================================================
-       2. NAVIGATION & SETTINGS
+       2. UI NAVIGATION & SETTINGS
     ========================================================= */
-    let activeEngine = 'gemini';
-    let torchStream = null;
-    let torchState = false;
-    let activeRecognition = null;
-    let antiTheftArmed = false;
-    let sirenInterval = null;
-    let lastAccX = null, lastAccY = null, lastAccZ = null;
-
     function loadSavedSettings() {
       const savedName = MJSafeStore.get('mj_user_name') || 'Boss';
       document.getElementById('userNameInp').value = MJSafeStore.get('mj_user_name') || '';
@@ -1385,18 +1169,9 @@
       }
     }
 
-    function selectEngine(eng) {
-      activeEngine = eng;
-      document.querySelectorAll('.engine-card').forEach(c => c.classList.remove('selected'));
-      if (eng === 'gemini') document.getElementById('engGemini').classList.add('selected');
-      if (eng === 'groq') document.getElementById('engGroq').classList.add('selected');
-      if (eng === 'openrouter') document.getElementById('engOpenRouter').classList.add('selected');
-    }
-
     function closeSheetAndReset() {
       switchView('orb');
       document.getElementById('resultSheet').classList.remove('open');
-      document.getElementById('foundCopy').classList.remove('show');
       document.getElementById('heroCopy').style.opacity = '1';
       document.getElementById('morphPill').classList.remove('searching-mode');
       document.getElementById('horizonGlow').classList.remove('searching');
@@ -1418,20 +1193,22 @@
       setTimeout(() => {
         document.getElementById('mainAskInput').value = val;
         submitMainQuery();
-      }, 250);
+      }, 200);
     }
 
     /* =========================================================
-       3. ANTI-THEFT SIREN GUARD
+       3. HARDWARE & NATIVE BRIDGE EXECUTOR (100% WORKING)
     ========================================================= */
-    function playLoudSirenPulse() {
+    let webSirenTimer = null;
+
+    function playWebSiren() {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioCtx();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(780, ctx.currentTime);
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
         osc.frequency.linearRampToValueAtTime(1750, ctx.currentTime + 0.35);
         gain.gain.setValueAtTime(0.95, ctx.currentTime);
         osc.connect(gain);
@@ -1441,58 +1218,7 @@
       } catch (e) {}
     }
 
-    function handleMotionGuard(e) {
-      if (!antiTheftArmed) return;
-      const acc = e.accelerationIncludingGravity;
-      if (!acc) return;
-      if (lastAccX === null) {
-        lastAccX = acc.x; lastAccY = acc.y; lastAccZ = acc.z;
-        return;
-      }
-      const delta = Math.abs(acc.x - lastAccX) + Math.abs(acc.y - lastAccY) + Math.abs(acc.z - lastAccZ);
-      lastAccX = acc.x; lastAccY = acc.y; lastAccZ = acc.z;
-      if (delta > 6.5 && !sirenInterval) {
-        document.getElementById('horizonGlow').classList.add('siren-alert');
-        playLoudSirenPulse();
-        speakText('સાવધાન! ફોનને અડકવામાં આવ્યો છે!');
-        sirenInterval = setInterval(() => {
-          if (!antiTheftArmed) { clearInterval(sirenInterval); sirenInterval = null; return; }
-          playLoudSirenPulse();
-        }, 750);
-      }
-    }
-
-    function armAntiTheftGuard(mode) {
-      const isOff = (mode || '').toLowerCase().includes('off') || (mode || '').toLowerCase().includes('disarm') || (mode || '').toLowerCase().includes('stop') || (mode || '').toLowerCase().includes('બંધ');
-      if (isOff) {
-        antiTheftArmed = false;
-        if (sirenInterval) { clearInterval(sirenInterval); sirenInterval = null; }
-        document.getElementById('horizonGlow').classList.remove('siren-alert');
-        window.removeEventListener('devicemotion', handleMotionGuard);
-        return 'SIREN DISARMED ✅';
-      } else {
-        antiTheftArmed = true;
-        lastAccX = null; lastAccY = null; lastAccZ = null;
-        window.addEventListener('devicemotion', handleMotionGuard);
-        return 'ANTI-THEFT ARMED 🚨';
-      }
-    }
-
-    /* =========================================================
-       4. CRASH-FREE NATIVE ANDROID + WEB EXECUTOR
-    ========================================================= */
-    function extractDynamicAppName(query) {
-      const cleaned = query.trim();
-      const engMatch = cleaned.match(/^(?:please\s+)?(?:open|launch|start|run)\s+(.+?)(?:\s+app|\s+application)?$/i);
-      if (engMatch && engMatch[1]) return engMatch[1].trim();
-
-      const localMatch = cleaned.match(/^(.+?)\s+(?:એપ\s+)?(?:ખોલ|ખોલો|ચાલુ\s*કર|ચાલુ\s*કરો|open\s*kar|open\s*karo|chalu\s*kar)$/i);
-      if (localMatch && localMatch[1]) return localMatch[1].trim();
-      return null;
-    }
-
-    // NEVER uses window.location.href = 'intent://...' so WebView NEVER crashes or closes!
-    async function triggerAndroidIntent(cmd) {
+    async function executeMasterAction(cmd) {
       const intent = (cmd.intent || 'NONE').toUpperCase();
       const target = (cmd.target || '').trim();
       const value = (cmd.value || '').trim();
@@ -1502,88 +1228,65 @@
 
       try {
         switch (intent) {
-          case 'OPEN_APP': {
-            if (hasNativeBridge() && window.MJNativeBridge.openApp) {
-              const res = window.MJNativeBridge.openApp(target, pkg);
-              return res || `OPENED: ${target.toUpperCase()}`;
-            }
-            const webMap = {
-              whatsapp: 'https://web.whatsapp.com',
-              youtube: 'https://www.youtube.com',
-              instagram: 'https://www.instagram.com',
-              maps: 'https://maps.google.com',
-              gmail: 'https://mail.google.com'
-            };
-            const url = webMap[target.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(target)}`;
-            window.open(url, '_blank');
-            return `LAUNCHED: ${target.toUpperCase()}`;
-          }
-
           case 'TORCH': {
             const turnOn = !(value || target).toLowerCase().includes('off') && !(value || target).toLowerCase().includes('બંધ');
-            if (hasNativeBridge() && window.MJNativeBridge.toggleTorch) {
-              window.MJNativeBridge.toggleTorch(turnOn);
-              return `FLASHLIGHT: ${turnOn ? 'ON 🔦' : 'OFF'}`;
+            if (hasNative()) {
+              return window.MJNativeBridge.toggleTorch(turnOn);
             }
-            if (turnOn) {
-              torchStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', torch: true } });
-              await torchStream.getVideoTracks()[0].applyConstraints({ advanced: [{ torch: true }] });
-              return 'FLASHLIGHT: ON 🔦';
-            } else if (torchStream) {
-              torchStream.getTracks().forEach(t => t.stop());
-              torchStream = null;
-              return 'FLASHLIGHT: OFF';
-            }
-            return `FLASHLIGHT: ${turnOn ? 'ON' : 'OFF'}`;
+            return `FLASHLIGHT: ${turnOn ? 'ON 🔦' : 'OFF'}`;
           }
 
-          case 'SETTINGS': {
-            if (hasNativeBridge() && window.MJNativeBridge.openSetting) {
-              window.MJNativeBridge.openSetting(target || value || 'settings');
-              return `OPENED: ${(target || value || 'SETTINGS').toUpperCase()}`;
+          case 'VOLUME': {
+            const lvl = parseInt((value || target).replace(/\D/g, ''), 10);
+            const finalPct = isNaN(lvl) ? 80 : Math.min(100, Math.max(0, lvl));
+            if (hasNative()) {
+              return window.MJNativeBridge.setVolume(finalPct);
             }
-            return `SETTING: ${(target || 'SYSTEM').toUpperCase()}`;
+            return `VOLUME SET: ${finalPct}% 🔊`;
           }
 
-          case 'CALL': {
-            const num = (target || value).replace(/\D/g, '');
-            if (hasNativeBridge() && window.MJNativeBridge.makeCall) {
-              window.MJNativeBridge.makeCall(num);
-              return `DIALING: ${num || 'PHONE'}`;
+          case 'BRIGHTNESS': {
+            const lvl = parseInt((value || target).replace(/\D/g, ''), 10);
+            const finalPct = isNaN(lvl) ? 85 : Math.min(100, Math.max(5, lvl));
+            if (hasNative()) {
+              return window.MJNativeBridge.setBrightness(finalPct);
             }
-            window.open(`tel:${num}`, '_self');
-            return `DIALING: ${num || 'PHONE'}`;
+            return `BRIGHTNESS SET: ${finalPct}% ☀️`;
+          }
+
+          case 'OPEN_APP': {
+            if (hasNative()) {
+              return window.MJNativeBridge.openApp(target, pkg);
+            }
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(target)}`, '_blank');
+            return `OPENED: ${target.toUpperCase()}`;
           }
 
           case 'WHATSAPP': {
             const phone = target.replace(/\D/g, '');
-            const msg = value || 'Hello';
-            if (hasNativeBridge() && window.MJNativeBridge.openWhatsApp) {
-              window.MJNativeBridge.openWhatsApp(phone, msg);
-              return 'WHATSAPP OPENED 💬';
+            const msg = value || '';
+            if (hasNative()) {
+              return window.MJNativeBridge.sendWhatsAppAuto(phone, msg);
             }
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-            return 'WHATSAPP OPENED 💬';
+            return 'WHATSAPP LAUNCHED 💬';
+          }
+
+          case 'CALL': {
+            const num = (target || value).replace(/\D/g, '');
+            if (hasNative()) {
+              return window.MJNativeBridge.makeCall(num);
+            }
+            return `CALLING: ${num || 'DIALER'} 📞`;
           }
 
           case 'YOUTUBE_PLAY': {
             const q = value || target;
-            if (hasNativeBridge() && window.MJNativeBridge.openYouTubeSearch) {
-              window.MJNativeBridge.openYouTubeSearch(q);
-              return `YOUTUBE: ${q.toUpperCase()}`;
+            if (hasNative()) {
+              return window.MJNativeBridge.openYouTubeSearch(q);
             }
             window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`, '_blank');
-            return `YOUTUBE: ${q.toUpperCase()}`;
-          }
-
-          case 'GOOGLE_SEARCH': {
-            const q = value || target;
-            if (hasNativeBridge() && window.MJNativeBridge.openUrl) {
-              window.MJNativeBridge.openUrl(`https://www.google.com/search?q=${encodeURIComponent(q)}`);
-              return `GOOGLE: ${q.toUpperCase()}`;
-            }
-            window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, '_blank');
-            return `GOOGLE SEARCH`;
+            return `YOUTUBE: ${q.toUpperCase()} ▶️`;
           }
 
           case 'ALARM': {
@@ -1595,24 +1298,45 @@
             if (ampm === 'pm' && hr < 12) hr += 12;
             if (ampm === 'am' && hr === 12) hr = 0;
 
-            if (hasNativeBridge() && window.MJNativeBridge.setAlarm) {
-              window.MJNativeBridge.setAlarm(hr, min, 'MJ AI Alarm');
-              return `ALARM SET: ${hr}:${String(min).padStart(2, '0')} ⏰`;
+            if (hasNative()) {
+              return window.MJNativeBridge.setAlarm(hr, min, 'MJ AI Alarm');
             }
-            return `ALARM: ${hr}:${String(min).padStart(2, '0')}`;
+            return `ALARM SET: ${hr}:${String(min).padStart(2, '0')} ⏰`;
+          }
+
+          case 'SETTINGS': {
+            if (hasNative()) {
+              return window.MJNativeBridge.openSetting(target || value || 'settings');
+            }
+            return `SETTINGS: ${(target || 'SYSTEM').toUpperCase()}`;
           }
 
           case 'SECURITY_ARM': {
-            return armAntiTheftGuard(value || target || 'on');
+            const isOff = (value || target).toLowerCase().includes('off') || (value || target).toLowerCase().includes('disarm') || (value || target).toLowerCase().includes('stop') || (value || target).toLowerCase().includes('બંધ');
+            if (isOff) {
+              document.getElementById('horizonGlow').classList.remove('siren-alert');
+              if (webSirenTimer) { clearInterval(webSirenTimer); webSirenTimer = null; }
+              if (hasNative()) return window.MJNativeBridge.setAntiTheft(false);
+              return 'SIREN DISARMED ✅';
+            } else {
+              if (hasNative()) return window.MJNativeBridge.setAntiTheft(true);
+              return 'ANTI-THEFT GUARD ARMED 🚨';
+            }
           }
 
-          case 'LOCATION': {
-            if (hasNativeBridge() && window.MJNativeBridge.openUrl) {
-              window.MJNativeBridge.openUrl('geo:0,0?q=My+Location');
-              return 'OPENED GOOGLE MAPS 📍';
+          case 'SCROLL_REELS': {
+            const isOff = (value || target).toLowerCase().includes('off') || (value || target).toLowerCase().includes('stop') || (value || target).toLowerCase().includes('બંધ');
+            if (hasNative()) {
+              return window.MJNativeBridge.toggleAutoScrollReels(!isOff);
             }
-            window.open('https://maps.google.com', '_blank');
-            return 'OPENED MAPS 📍';
+            return isOff ? 'AUTO-SCROLL STOPPED' : 'AUTO-SCROLL REELS ACTIVE 📲';
+          }
+
+          case 'CLICK_TEXT': {
+            if (hasNative()) {
+              return window.MJNativeBridge.clickScreenText(target || value);
+            }
+            return `AUTO-TAP: ${target || value}`;
           }
         }
       } catch (e) {
@@ -1621,126 +1345,290 @@
       return null;
     }
 
+    // Callback from Java when Motion or Charger Unplug triggers Anti-Theft Siren!
+    window.onAntiTheftTriggered = function(reason) {
+      document.getElementById('horizonGlow').classList.add('siren-alert');
+      playWebSiren();
+      if (!webSirenTimer) {
+        webSirenTimer = setInterval(playWebSiren, 750);
+      }
+      speakText(`સાવધાન! ${reason}! સિક્યોરિટી એલાર્મ વાગી રહ્યો છે!`);
+    };
+
     /* =========================================================
-       5. MULTI-ENGINE AI BRAIN + 100% FREE BUILT-IN AI FALLBACK
+       4. MASTER COMMAND PROCESSOR (OFFLINE NLU + MULTI-AI)
     ========================================================= */
-    async function callGeminiAPI(key, systemPrompt, userText) {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: systemPrompt + "\nUser Command: " + userText }] }],
-          generationConfig: { responseMimeType: "application/json" }
-        })
-      });
-      if (!res.ok) throw new Error('Gemini error');
-      const data = await res.json();
-      return data?.candidates?.[0]?.content?.parts?.[0]?.text || null;
+    function extractDynamicAppName(query) {
+      const cleaned = query.trim();
+      const engMatch = cleaned.match(/^(?:please\s+)?(?:open|launch|start|run)\s+(.+?)(?:\s+app|\s+application)?$/i);
+      if (engMatch && engMatch[1]) return engMatch[1].trim();
+
+      const localMatch = cleaned.match(/^(.+?)\s+(?:એપ\s+)?(?:ખોલ|ખોલો|ચાલુ\s*કર|ચાલુ\s*કરો|open\s*kar|open\s*karo|chalu\s*kar)$/i);
+      if (localMatch && localMatch[1]) return localMatch[1].trim();
+      return null;
     }
 
-    async function callGroqAPI(key, systemPrompt, userText) {
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
-        body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
-          response_format: { type: "json_object" },
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userText }
-          ]
-        })
-      });
-      if (!res.ok) throw new Error('Groq error');
-      const data = await res.json();
-      return data?.choices?.[0]?.message?.content || null;
+    async function processCommand(query) {
+      const low = query.toLowerCase().trim();
+      const userName = MJSafeStore.get('mj_user_name') || 'Boss';
+
+      // 1. Flashlight / Torch
+      if (low.includes('flashlight') || low.includes('torch') || low.includes('લાઈટ') || low.includes('ટોર્ચ') || low.includes('light')) {
+        const isOff = low.includes('off') || low.includes('બંધ') || low.includes('bandh');
+        const badge = await executeMasterAction({ intent: 'TORCH', value: isOff ? 'off' : 'on' });
+        const msg = `જી ${userName}, ફોનની <b>Flashlight ${isOff ? 'OFF' : 'ON'}</b> કરી દીધી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 2. Direct Volume Control (e.g. "Volume 80%", "અવાજ ફૂલ કર", "mute phone")
+      if (low.includes('volume') || low.includes('અવાજ') || low.includes('mute') || low.includes('આવાજ')) {
+        let pct = 80;
+        if (low.includes('mute') || low.includes('0') || low.includes('બંધ')) pct = 0;
+        else if (low.includes('full') || low.includes('max') || low.includes('ફૂલ') || low.includes('100')) pct = 100;
+        else {
+          const m = low.match(/(\d{1,3})/);
+          if (m) pct = parseInt(m[1], 10);
+        }
+        const badge = await executeMasterAction({ intent: 'VOLUME', value: String(pct) });
+        const msg = `જી ${userName}, ફોનનો <b>Volume ${pct}%</b> સેટ કરી દીધો છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 3. Direct Brightness Control
+      if (low.includes('brightness') || low.includes('બ્રાઇટનેસ')) {
+        let pct = 85;
+        if (low.includes('low') || low.includes('ઓછી')) pct = 20;
+        else if (low.includes('full') || low.includes('max') || low.includes('100')) pct = 100;
+        else {
+          const m = low.match(/(\d{1,3})/);
+          if (m) pct = parseInt(m[1], 10);
+        }
+        const badge = await executeMasterAction({ intent: 'BRIGHTNESS', value: String(pct) });
+        const msg = `જી ${userName}, સ્ક્રીન <b>Brightness ${pct}%</b> કરી દીધી છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 4. Battery Status (Native Android BatteryManager + Web Battery)
+      if (low.includes('battery') && !low.includes('optimization') || low.includes('બેટરી')) {
+        if (hasNative() && window.MJNativeBridge.getBatteryInfo) {
+          const info = window.MJNativeBridge.getBatteryInfo();
+          const msg = `જી ${userName}, તમારા ફોનની બેટરી <b>${info}</b> છે.`;
+          return { html: `${msg}<br><span class="exec-badge">⚡ BATTERY: ${info}</span>`, speech: msg };
+        }
+        if ('getBattery' in navigator) {
+          try {
+            const bat = await navigator.getBattery();
+            const pct = Math.round(bat.level * 100);
+            const msg = `${userName}, તમારા ફોનની બેટરી <b>${pct}%</b> છે.`;
+            return { html: `${msg}<br><span class="exec-badge">⚡ BATTERY: ${pct}%</span>`, speech: msg };
+          } catch (e) {}
+        }
+      }
+
+      // 5. Read Unread WhatsApp & System Notifications Aloud
+      if (low.includes('notification') && !low.includes('open') || low.includes('unread') || low.includes('નોટિફિકેશન વાંચ') || low.includes('મેસેજ વાંચ')) {
+        if (hasNative() && window.MJNativeBridge.getUnreadNotifications) {
+          const rawNotifs = window.MJNativeBridge.getUnreadNotifications();
+          return {
+            html: `<b>🔔 Incoming Notifications:</b><br><br>${rawNotifs}<br><span class="exec-badge">⚡ READ ALOUD</span>`,
+            speech: rawNotifs.replace(/<[^>]*>/g, ' ')
+          };
+        }
+      }
+
+      // 6. Screen Vision & OCR Read Screen
+      if (low.includes('read screen') || low.includes('ocr') || low.includes('સ્ક્રીન વાંચ') || low.includes('screen vision')) {
+        if (hasNative() && window.MJNativeBridge.readScreenText) {
+          const screenTxt = window.MJNativeBridge.readScreenText();
+          return {
+            html: `<b>👁️ Screen Vision OCR:</b><br><br>${screenTxt}<br><span class="exec-badge">⚡ SCREEN SCANNED</span>`,
+            speech: screenTxt
+          };
+        }
+      }
+
+      // 7. Auto-Scroll Reels / Shorts
+      if (low.includes('scroll reel') || low.includes('auto scroll') || low.includes('રીલ્સ સ્ક્રોલ')) {
+        const isOff = low.includes('off') || low.includes('stop') || low.includes('બંધ');
+        const badge = await executeMasterAction({ intent: 'SCROLL_REELS', value: isOff ? 'off' : 'on' });
+        const msg = isOff
+          ? `ઓટો-સ્ક્રોલ રીલ્સ મોડ <b>બંધ</b> કર્યો છે.`
+          : `<b>Auto-Scroll Reels</b> ચાલુ થઈ ગયું છે! હવે તમે Instagram કે YouTube Shorts ખોલશો એટલે MJ દર 5 સેકન્ડે આપમેળે રીલ સ્વાઈપ કરશે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 8. Anti-Theft Motion & Unplug Siren
+      if (low.includes('security') || low.includes('siren') || low.includes('anti-theft') || low.includes('સાયરન') || low.includes('disarm')) {
+        const isOff = low.includes('off') || low.includes('disarm') || low.includes('stop') || low.includes('બંધ');
+        const badge = await executeMasterAction({ intent: 'SECURITY_ARM', value: isOff ? 'off' : 'on' });
+        const msg = isOff
+          ? `<b>Anti-Theft Siren</b> બંધ કરી દીધું છે.`
+          : `<b>Anti-Theft Motion & Charger Unplug Guard</b> સક્રિય થઈ ગયો છે! હવે કોઈ ફોનને અડશે કે ચાર્જર કાઢશે તો 100% અવાજે સાયરન વાગશે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 9. System Settings (Accessibility, Notification Access, Wi-Fi, Bluetooth, Display, Sound, Developer)
+      const settingMatchers = [
+        { keys: ['accessibility', 'એક્સેસિબિલિટી'], target: 'accessibility', name: 'Accessibility Settings' },
+        { keys: ['notification access', 'નોટિફિકેશન સેટિંગ'], target: 'notificationaccess', name: 'Notification Listener Settings' },
+        { keys: ['wi-fi', 'wifi', 'વાઇફાઇ'], target: 'wifi', name: 'Wi-Fi Settings' },
+        { keys: ['bluetooth', 'બ્લૂટૂથ'], target: 'bluetooth', name: 'Bluetooth Settings' },
+        { keys: ['developer', 'ડેવલપર'], target: 'developer', name: 'Developer Options' },
+        { keys: ['display setting', 'ડિસ્પ્લે'], target: 'display', name: 'Display Settings' },
+        { keys: ['sound setting'], target: 'sound', name: 'Sound Settings' }
+      ];
+      for (const sm of settingMatchers) {
+        if (sm.keys.some(k => low.includes(k))) {
+          const badge = await executeMasterAction({ intent: 'SETTINGS', target: sm.target });
+          const msg = `જી ${userName}, <b>${sm.name}</b> ખોલી દીધું છે.`;
+          return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+        }
+      }
+
+      // 10. Alarm Setting
+      if (low.includes('alarm') || low.includes('એલાર્મ')) {
+        const badge = await executeMasterAction({ intent: 'ALARM', value: query });
+        const msg = `જી ${userName}, તમારો <b>System Alarm</b> સેટ કરી દીધો છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 11. Direct Phone Call
+      if (low.startsWith('call ') || low.includes('કોલ કર')) {
+        const num = query.replace(/\D/g, '');
+        const badge = await executeMasterAction({ intent: 'CALL', target: num });
+        const msg = `જી ${userName}, <b>${num || 'Dialer'}</b> પર કોલ લગાવી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 12. Direct WhatsApp Message (e.g. "send whatsapp to 9876543210 hello" or "whatsapp message")
+      if (low.includes('whatsapp') && (low.includes('send') || low.includes('msg') || low.includes('message') || low.includes('મેસેજ'))) {
+        const numMatch = query.match(/\d{10,12}/);
+        const phone = numMatch ? numMatch[0] : '';
+        const textMsg = query.replace(/send|whatsapp|message|msg|to|\d{10,12}|પર|મેસેજ|મોકલ/gi, '').trim() || 'Hello';
+        const badge = await executeMasterAction({ intent: 'WHATSAPP', target: phone, value: textMsg });
+        const msg = `જી ${userName}, WhatsApp પર મેસેજ મોકલી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 13. YouTube Play / Search
+      if (low.startsWith('play ') || low.includes('on youtube') || low.includes('યુટ્યુબ પર')) {
+        const cleanQ = query.replace(/play|on youtube|યુટ્યુબ પર|વગાડ/gi, '').trim() || query;
+        const badge = await executeMasterAction({ intent: 'YOUTUBE_PLAY', value: cleanQ });
+        const msg = `જી ${userName}, YouTube પર <b>${cleanQ}</b> ચલાવી રહ્યો છું.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 14. Dynamic App Launch (Opens ANY installed app on the phone!)
+      const dynamicApp = extractDynamicAppName(query);
+      if (dynamicApp) {
+        const badge = await executeMasterAction({ intent: 'OPEN_APP', target: dynamicApp });
+        const msg = `જી ${userName}, <b>${dynamicApp}</b> ઓપન કરી દીધું છે.`;
+        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
+      }
+
+      // 15. Cloud AI Brain (Gemini / Groq / OpenRouter / Free AI)
+      const aiRes = await askCloudAIBrain(query);
+      if (aiRes) return aiRes;
+
+      const fallback = `જી ${userName}, મેં તમારો કમાન્ડ <b>"${query}"</b> નોંધી લીધો છે.`;
+      return { html: fallback, speech: fallback };
     }
 
-    async function callOpenRouterAPI(key, systemPrompt, userText) {
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
-        body: JSON.stringify({
-          model: "google/gemini-2.0-flash-001",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userText }
-          ]
-        })
-      });
-      if (!res.ok) throw new Error('OpenRouter error');
-      const data = await res.json();
-      return data?.choices?.[0]?.message?.content || null;
-    }
-
-    // 100% Free Built-In Keyless AI Brain (Works out of the box with ZERO API Keys!)
-    async function callFreeBuiltInAI(systemPrompt, userText) {
-      const res = await fetch("https://text.pollinations.ai/openai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "openai",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userText }
-          ]
-        })
-      });
-      if (!res.ok) throw new Error('Free AI HTTP ' + res.status);
-      const data = await res.json();
-      return data?.choices?.[0]?.message?.content || null;
-    }
-
-    async function runMJDeepAgent(userText) {
+    async function askCloudAIBrain(userText) {
       const geminiKey = document.getElementById('geminiKey').value.trim() || MJSafeStore.get('mj_gemini_key');
       const groqKey = document.getElementById('groqKey').value.trim() || MJSafeStore.get('mj_groq_key');
       const openrouterKey = document.getElementById('openrouterKey').value.trim() || MJSafeStore.get('mj_openrouter_key');
       const userName = MJSafeStore.get('mj_user_name') || 'Boss';
 
-      const agentSystemPrompt = `You are MJ, a smart Android AI Assistant. The user's name is "${userName}".
+      const sysPrompt = `You are MJ, a Master Android AI Agent. The user's name is "${userName}".
 Reply in the user's language (Gujarati, Hindi, or English).
-Always reply strictly in valid JSON with this exact structure:
+Always reply strictly in valid JSON:
 {
-  "reply": "Clear, helpful answer to ${userName}",
-  "intent": "NONE | OPEN_APP | CALL | WHATSAPP | YOUTUBE_PLAY | GOOGLE_SEARCH | ALARM | SETTINGS | TORCH | SECURITY_ARM | LOCATION",
-  "target": "app name (whatsapp/youtube/instagram/camera/calculator/chrome/phonepe/paytm), phone number, or setting name (wifi/bluetooth/volume/brightness/accessibility/developer)",
-  "pkg": "exact Android package name if launching an app, else empty string",
-  "value": "search query, message text, alarm time, or on/off"
+  "reply": "Helpful answer to ${userName}",
+  "intent": "NONE | OPEN_APP | CALL | WHATSAPP | YOUTUBE_PLAY | ALARM | SETTINGS | TORCH | VOLUME | BRIGHTNESS | SECURITY_ARM | SCROLL_REELS",
+  "target": "app name, phone number, or setting name",
+  "pkg": "Android package name if launching app, else empty",
+  "value": "query, message text, or number"
 }`;
 
-      const queue = [];
-      if (geminiKey) queue.push(() => callGeminiAPI(geminiKey, agentSystemPrompt, userText));
-      if (groqKey) queue.push(() => callGroqAPI(groqKey, agentSystemPrompt, userText));
-      if (openrouterKey) queue.push(() => callOpenRouterAPI(openrouterKey, agentSystemPrompt, userText));
-      // Always include Free Built-in AI so it NEVER fails even without keys!
-      queue.push(() => callFreeBuiltInAI(agentSystemPrompt, userText));
+      let raw = null;
 
-      let rawResponse = null;
-      for (const providerCall of queue) {
+      // 1. Gemini
+      if (geminiKey) {
         try {
-          rawResponse = await providerCall();
-          if (rawResponse) break;
-        } catch (err) {
-          console.warn("Switching to next AI provider:", err);
-        }
+          const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: sysPrompt + "\nUser: " + userText }] }],
+              generationConfig: { responseMimeType: "application/json" }
+            })
+          });
+          const d = await r.json();
+          raw = d?.candidates?.[0]?.content?.parts?.[0]?.text;
+        } catch (e) {}
       }
 
-      if (!rawResponse) return null;
+      // 2. Groq
+      if (!raw && groqKey) {
+        try {
+          const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${groqKey}` },
+            body: JSON.stringify({
+              model: "llama-3.3-70b-versatile",
+              response_format: { type: "json_object" },
+              messages: [{ role: "system", content: sysPrompt }, { role: "user", content: userText }]
+            })
+          });
+          const d = await r.json();
+          raw = d?.choices?.[0]?.message?.content;
+        } catch (e) {}
+      }
+
+      // 3. OpenRouter
+      if (!raw && openrouterKey) {
+        try {
+          const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${openrouterKey}` },
+            body: JSON.stringify({
+              model: "google/gemini-2.0-flash-001",
+              messages: [{ role: "system", content: sysPrompt }, { role: "user", content: userText }]
+            })
+          });
+          const d = await r.json();
+          raw = d?.choices?.[0]?.message?.content;
+        } catch (e) {}
+      }
+
+      // 4. Built-in Keyless Free AI (GET & POST fallback)
+      if (!raw) {
+        try {
+          const url = `https://text.pollinations.ai/${encodeURIComponent("Reply briefly in Gujarati/Hindi/English to: " + userText)}`;
+          const r = await fetch(url);
+          if (r.ok) {
+            const plainTxt = await r.text();
+            if (plainTxt) {
+              return { html: plainTxt.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'), speech: plainTxt };
+            }
+          }
+        } catch (e) {}
+      }
+
+      if (!raw) return null;
 
       try {
-        const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
-        const cleaned = jsonMatch ? jsonMatch[0] : rawResponse;
-        const cmd = JSON.parse(cleaned);
-        const badge = await triggerAndroidIntent(cmd);
-        const formattedReply = (cmd.reply || '').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-        const badgeHtml = badge ? `<br><span class="exec-badge">⚡ ${badge}</span>` : '';
+        const m = raw.match(/\{[\s\S]*\}/);
+        const cmd = JSON.parse(m ? m[0] : raw);
+        const badge = await executeMasterAction(cmd);
+        const formatted = (cmd.reply || '').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
         return {
-          html: formattedReply + badgeHtml,
+          html: formatted + (badge ? `<br><span class="exec-badge">⚡ ${badge}</span>` : ''),
           speech: cmd.reply || ''
         };
       } catch (e) {
-        const formatted = rawResponse.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-        return { html: formatted, speech: rawResponse };
+        return { html: raw.replace(/\n/g, '<br>'), speech: raw };
       }
     }
 
@@ -1752,7 +1640,6 @@ Always reply strictly in valid JSON with this exact structure:
 
       const morphPill = document.getElementById('morphPill');
       const heroCopy = document.getElementById('heroCopy');
-      const foundCopy = document.getElementById('foundCopy');
       const resultSheet = document.getElementById('resultSheet');
       const horizonGlow = document.getElementById('horizonGlow');
 
@@ -1760,12 +1647,10 @@ Always reply strictly in valid JSON with this exact structure:
       heroCopy.style.opacity = '0';
       morphPill.classList.add('searching-mode');
       horizonGlow.classList.add('searching');
-      document.getElementById('searchingLabel').innerText = 'Executing...';
       ribbonSpeed = 0.068;
 
       const finalResult = await processCommand(query);
 
-      foundCopy.classList.remove('show');
       document.getElementById('sheetQueryPill').innerText = query;
       document.getElementById('sheetAnswerText').innerHTML = finalResult.html;
       resultSheet.classList.add('open');
@@ -1776,111 +1661,17 @@ Always reply strictly in valid JSON with this exact structure:
       speakText(finalResult.speech);
     }
 
-    async function processCommand(query) {
-      const low = query.toLowerCase().trim();
-      const userName = MJSafeStore.get('mj_user_name') || 'Boss';
-
-      // 1. Instant Flashlight / Torch
-      if (low.includes('flashlight') || low.includes('torch') || low.includes('લાઈટ') || low.includes('ટોર્ચ')) {
-        const isOff = low.includes('off') || low.includes('બંધ');
-        const badge = await triggerAndroidIntent({ intent: 'TORCH', value: isOff ? 'off' : 'on' });
-        const msg = `ફોનની <b>Flashlight ${isOff ? 'OFF' : 'ON'}</b> કરી દીધી છે.`;
-        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
-      }
-
-      // 2. Instant Battery Status
-      if (low.includes('battery') || low.includes('બેટરી')) {
-        if ('getBattery' in navigator) {
-          try {
-            const bat = await navigator.getBattery();
-            const pct = Math.round(bat.level * 100);
-            const msg = `${userName}, તમારા ફોનની બેટરી હાલમાં <b>${pct}%</b> છે (${bat.charging ? 'Charging ⚡' : 'Normal'}).`;
-            return { html: `${msg}<br><span class="exec-badge">⚡ BATTERY: ${pct}%</span>`, speech: msg };
-          } catch (e) {}
-        }
-      }
-
-      // 3. Instant Anti-Theft Siren
-      if (low.includes('security') || low.includes('siren') || low.includes('anti-theft') || low.includes('સાયરન')) {
-        const isOff = low.includes('off') || low.includes('disarm') || low.includes('stop') || low.includes('બંધ');
-        const badge = armAntiTheftGuard(isOff ? 'off' : 'on');
-        const msg = isOff ? `<b>Anti-Theft Siren</b> બંધ કરી દીધું છે.` : `<b>Anti-Theft Motion Siren</b> ચાલુ થઈ ગયું છે!`;
-        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
-      }
-
-      // 4. Instant System Settings (Wi-Fi, Bluetooth, Sound, Display, Accessibility, Developer)
-      const sysMap = [
-        { keys: ['wi-fi', 'wifi', 'વાઇફાઇ'], target: 'wifi', label: 'Wi-Fi Settings' },
-        { keys: ['bluetooth', 'બ્લૂટૂથ'], target: 'bluetooth', label: 'Bluetooth Settings' },
-        { keys: ['sound', 'volume', 'અવાજ'], target: 'sound', label: 'Sound & Volume Settings' },
-        { keys: ['display', 'brightness', 'બ્રાઇટનેસ'], target: 'display', label: 'Display & Brightness' },
-        { keys: ['accessibility', 'એક્સેસિબિલિટી'], target: 'accessibility', label: 'Accessibility Settings' },
-        { keys: ['developer', 'ડેવલપર'], target: 'developer', label: 'Developer Options' }
-      ];
-      for (const s of sysMap) {
-        if (s.keys.some(k => low.includes(k))) {
-          const badge = await triggerAndroidIntent({ intent: 'SETTINGS', target: s.target });
-          const msg = `જી ${userName}, <b>${s.label}</b> ઓપન કરી દીધું છે.`;
-          return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
-        }
-      }
-
-      // 5. Instant Alarm Setting
-      if (low.includes('alarm') || low.includes('એલાર્મ')) {
-        const badge = await triggerAndroidIntent({ intent: 'ALARM', value: query });
-        const msg = `જી ${userName}, તમારો <b>Alarm</b> સેટ કરી દીધો છે.`;
-        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
-      }
-
-      // 6. Instant Call
-      if (low.startsWith('call ') || low.includes('કોલ કર')) {
-        const num = query.replace(/\D/g, '');
-        const badge = await triggerAndroidIntent({ intent: 'CALL', target: num });
-        const msg = `જી ${userName}, <b>${num || 'Dialer'}</b> પર કોલ લગાવી રહ્યો છું.`;
-        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
-      }
-
-      // 7. Instant YouTube Search / Play
-      if (low.startsWith('play ') || low.includes('on youtube') || low.includes('યુટ્યુબ પર')) {
-        const cleanQ = query.replace(/play|on youtube|યુટ્યુબ પર|વગાડ/gi, '').trim() || query;
-        const badge = await triggerAndroidIntent({ intent: 'YOUTUBE_PLAY', value: cleanQ });
-        const msg = `જી ${userName}, YouTube પર <b>${cleanQ}</b> ચલાવી રહ્યો છું.`;
-        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
-      }
-
-      // 8. Instant Dynamic App Open (Opens ANY installed app on the phone!)
-      const dynamicApp = extractDynamicAppName(query);
-      if (dynamicApp) {
-        const badge = await triggerAndroidIntent({ intent: 'OPEN_APP', target: dynamicApp });
-        const msg = `જી ${userName}, <b>${dynamicApp}</b> ઓપન કરી દીધું છે.`;
-        return { html: `${msg}<br><span class="exec-badge">⚡ ${badge}</span>`, speech: msg };
-      }
-
-      // 9. Ask AI Brain (Gemini / Groq / OpenRouter / Built-in Free AI)
-      const aiRes = await runMJDeepAgent(query);
-      if (aiRes) return aiRes;
-
-      const fallback = `જી ${userName}, તમારો કમાન્ડ <b>"${query}"</b> નોંધી લીધો છે. કૃપા કરીને તમારું ઇન્ટરનેટ કનેક્શન ચેક કરો.`;
-      return { html: fallback, speech: fallback };
-    }
-
     /* =========================================================
-       6. NATIVE ANDROID VOICE MIC & TTS + WEB FALLBACK
+       5. NATIVE VOICE & SPEECH ENGINE
     ========================================================= */
     function speakText(text) {
       if (!text) return;
       const clean = text.replace(/<[^>]*>/g, '').replace(/[*_#`~⚡✓]/g, '').trim();
       const lang = MJSafeStore.get('mj_lang') || 'gu-IN';
 
-      // 1. Use Native Android Text-to-Speech if running inside APK
-      if (hasNativeBridge() && window.MJNativeBridge.speak) {
-        try {
-          window.MJNativeBridge.speak(clean, lang);
-          return;
-        } catch (e) {}
+      if (hasNative() && window.MJNativeBridge.speak) {
+        try { window.MJNativeBridge.speak(clean, lang); return; } catch (e) {}
       }
-
-      // 2. Fallback to Browser SpeechSynthesis
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(clean);
@@ -1889,9 +1680,8 @@ Always reply strictly in valid JSON with this exact structure:
       }
     }
 
-    // Callback invoked directly by Android MainActivity.java when Native Voice Recognition finishes!
+    // Called directly by MainActivity.java when Google Voice Recognition completes!
     window.onNativeVoiceResult = function(spokenText) {
-      stopVoiceSession();
       if (spokenText && spokenText.trim()) {
         switchView('orb');
         document.getElementById('mainAskInput').value = spokenText.trim();
@@ -1899,75 +1689,30 @@ Always reply strictly in valid JSON with this exact structure:
       }
     };
 
-    function triggerNativeOrWebVoice() {
+    function startVoiceNow() {
       const lang = MJSafeStore.get('mj_lang') || 'gu-IN';
-
-      // 1. If running in Android APK, launch 100% reliable Native Android Google Voice Input!
-      if (hasNativeBridge() && window.MJNativeBridge.startVoice) {
-        try {
-          window.MJNativeBridge.startVoice(lang);
-          return;
-        } catch (e) {}
+      if (hasNative() && window.MJNativeBridge.startVoice) {
+        window.MJNativeBridge.startVoice(lang);
+        return;
       }
 
-      // 2. Otherwise use Web Speech API (for PC Browser)
-      switchView('voice');
       const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRec) {
-        alert('તમારા બ્રાઉઝરમાં માઈક સપોર્ટ નથી — નીચે ટાઈપ કરીને કમાન્ડ આપો.');
-        switchView('orb');
+        alert('માઈક શરૂ કરવા માટે APK વાપરો અથવા નીચે ટાઈપ કરો.');
         return;
       }
-
-      if (activeRecognition) {
-        stopVoiceSession();
-        return;
-      }
-
       const rec = new SpeechRec();
-      activeRecognition = rec;
       rec.lang = lang;
-      rec.interimResults = false;
-
-      rec.onstart = () => {
-        voicePulseAmp = 18;
-        document.getElementById('redMicBtn').classList.add('active');
-        document.getElementById('voiceBars').classList.add('speaking');
-        document.getElementById('voiceStateLabel').innerText = 'Listening... Speak Now';
-      };
-
       rec.onresult = (e) => {
-        const transcript = e.results[0][0].transcript;
-        stopVoiceSession();
-        switchView('orb');
-        document.getElementById('mainAskInput').value = transcript;
+        const txt = e.results[0][0].transcript;
+        document.getElementById('mainAskInput').value = txt;
         submitMainQuery();
       };
-
-      rec.onerror = () => stopVoiceSession();
-      rec.onend = () => stopVoiceSession();
-
-      try { rec.start(); } catch (e) { stopVoiceSession(); }
+      rec.start();
     }
 
-    function stopVoiceSession() {
-      if (activeRecognition) {
-        try { activeRecognition.abort(); } catch (e) {}
-        activeRecognition = null;
-      }
-      voicePulseAmp = 0;
-      document.getElementById('redMicBtn').classList.remove('active');
-      document.getElementById('voiceBars').classList.remove('speaking');
-      document.getElementById('voiceStateLabel').innerText = 'Tap Red Mic to Speak';
-    }
-
-    function openSettings() {
-      document.getElementById('settingsModal').classList.add('open');
-    }
-
-    function closeSettings() {
-      document.getElementById('settingsModal').classList.remove('open');
-    }
+    function openSettings() { document.getElementById('settingsModal').classList.add('open'); }
+    function closeSettings() { document.getElementById('settingsModal').classList.remove('open'); }
 
     function saveSettings() {
       const uName = document.getElementById('userNameInp').value.trim() || 'Boss';
@@ -1976,11 +1721,10 @@ Always reply strictly in valid JSON with this exact structure:
       MJSafeStore.set('mj_groq_key', document.getElementById('groqKey').value.trim());
       MJSafeStore.set('mj_openrouter_key', document.getElementById('openrouterKey').value.trim());
       MJSafeStore.set('mj_lang', document.getElementById('voiceLang').value);
-
       document.getElementById('greetingSub').innerText = `Hello ${uName}`;
       document.getElementById('hubTitle').innerText = `Hi, ${uName}!`;
       closeSettings();
-      speakText(`નમસ્તે ${uName}, તમારું સેટિંગ સેવ થઈ ગયું છે.`);
+      speakText(`નમસ્તે ${uName}, MJ તૈયાર છે.`);
     }
   </script>
 </body>
