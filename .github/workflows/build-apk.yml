@@ -40,20 +40,7 @@ jobs:
           npx cap init "MJ AI Agent" "com.mj.aiagent" --web-dir .
           npx cap add android
 
-      - name: Inject Permissions
-        run: |
-          MANIFEST="android/app/src/main/AndroidManifest.xml"
-          sed -i '/<application/i \
-    <uses-permission android:name="android.permission.INTERNET" />\
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />\
-    <uses-permission android:name="android.permission.CAMERA" />\
-    <uses-permission android:name="android.permission.VIBRATE" />\
-    <uses-permission android:name="android.permission.WAKE_LOCK" />\
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />' $MANIFEST
-
-      - name: Copy Files & Sync
+      - name: Copy Files and Sync
         run: |
           npx cap copy android
           npx cap sync android
@@ -68,17 +55,18 @@ jobs:
         run: |
           cp android/app/build/outputs/apk/debug/app-debug.apk MJ-AI-Agent.apk
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MJ-AI-Agent-APK
+          path: MJ-AI-Agent.apk
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.0
           name: "MJ AI Agent v1.0.0"
-          body: |
-            ## 📱 MJ AI Agent Official Android APK
-            Next-Gen Liquid Glass AI Agent
-            
-            ### 📥 Download APK:
-            Download the **MJ-AI-Agent.apk** file below directly to your phone.
+          body: "Official Android APK for MJ AI Agent. Download below!"
           files: MJ-AI-Agent.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
